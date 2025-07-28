@@ -1,6 +1,10 @@
 # RemindMi
 
-A Flutter-based task management application that helps families organize and track tasks between parents and dependents.
+**Software Engineering Group Project**
+
+A collaborative to-do list and reminder app designed for users with special needs, featuring admin accounts that can create and manage tasks while dependent accounts complete assigned tasks.
+
+*Developed as part of Software Engineering coursework, demonstrating collaborative development practices, Firebase integration, and accessible mobile application design.*
 
 ## Features
 
