@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "280337506389",
-    "project_id": "remindmi-9dc14",
-    "storage_bucket": "remindmi-9dc14.appspot.com"
+    "project_number": "260412068950",
+    "project_id": "remindmi-dde76",
+    "storage_bucket": "remindmi-dde76.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280337506389:android:662fced7f46d4b45cc74dc",
+        "mobilesdk_app_id": "1:260412068950:android:b2ce81ae2b74d78951d7f7",
         "android_client_info": {
           "package_name": "com.example.reminder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "280337506389-9h0a4h7bqbf5k86t9rtc53eqr178l65i.apps.googleusercontent.com",
+          "client_id": "260412068950-63hh6fbd6b3v2ah45p52ldi8p35m9pg4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDXqy3YrI9P5epegNg19lpCnSNJbmL0SoI"
+          "current_key": "AIzaSyANNlFgLM-YjdtckjZIzsQ7jfw8FRcOKzM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "280337506389-9h0a4h7bqbf5k86t9rtc53eqr178l65i.apps.googleusercontent.com",
+              "client_id": "260412068950-63hh6fbd6b3v2ah45p52ldi8p35m9pg4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

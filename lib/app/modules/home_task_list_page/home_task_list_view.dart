@@ -7,7 +7,6 @@ import 'package:remindmi/app/components/task_view.dart';
 import 'package:remindmi/app/helper/utils.dart';
 import 'package:remindmi/app/modules/addtask/add_task_view.dart';
 import 'package:remindmi/app/modules/home_task_list_page/home_task_list_controller.dart';
-import 'package:remindmi/app/modules/home_task_list_page/home_task_list_controller2.dart';
 //_________________IT IS PARENT'S HOME TASK LIST PAGE ____________________//
 
 class HomeTaskListViews extends StatefulWidget {
@@ -16,8 +15,8 @@ class HomeTaskListViews extends StatefulWidget {
 }
 
 class _HomeTaskListViewsState extends State<HomeTaskListViews> {
-  final home_task_controller = Get.put(HomeTaskListController());
-  final home_task_controller2 = Get.put(HomeTaskListController2());
+  final home_task_controller = Get.put(HomeTaskListController(taskStatus: ParentTaskStatus.incomplete));
+  final home_task_controller2 = Get.put(HomeTaskListController(taskStatus: ParentTaskStatus.complete), tag: 'completed');
   final getStorge = GetStorage();
 
   @override

@@ -7,7 +7,6 @@ import 'package:remindmi/app/components/task_list_card.dart';
 import 'package:remindmi/app/components/dependent_task_card_with_checkbox.dart';
 import 'package:remindmi/app/helper/utils.dart';
 import 'package:remindmi/app/modules/dependent_home_task/dependent_home_task_controller.dart';
-import 'package:remindmi/app/modules/dependent_home_task/dependent_home_task_controller2.dart';
 
 //______IT IS DEPENDENT'S HOME PAGE____________//
 class DependentHomeTaskListViews extends StatelessWidget {
@@ -15,8 +14,8 @@ class DependentHomeTaskListViews extends StatelessWidget {
   final getStorge = GetStorage();
 
   final dependent_home_task_controller =
-      Get.put(DependentHomeTaskListController());
-  final dependent_home_task_controller2 = Get.put(DependentHomeTaskListController2());
+      Get.put(DependentHomeTaskListController(taskStatus: TaskStatus.incomplete));
+  final dependent_home_task_controller2 = Get.put(DependentHomeTaskListController(taskStatus: TaskStatus.complete), tag: 'completed');
   @override
   Widget build(BuildContext context) {
     return Scaffold(

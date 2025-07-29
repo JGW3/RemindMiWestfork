@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/routes/app_pages.dart';
+import 'package:remindmi/app/services/storage_service.dart';
 
 class LoginController extends GetxController {
-  final getStorge = GetStorage();
 
   var emailError = "".obs;
   var passwordError = "".obs;
@@ -22,22 +21,9 @@ class LoginController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  TogglePasswordVisibility() {
-    if (passwordVisible.value == true) {
-      passwordVisible.value = false;
-    } else {
-      passwordVisible.value = true;
-    }
+  void togglePasswordVisibility() {
+    passwordVisible.value = !passwordVisible.value;
   }
 
   changeEmailText() {
@@ -108,10 +94,11 @@ class LoginController extends GetxController {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        getStorge.write("id", user.uid);
-        getStorge.write("fullName", documentSnapshot.get('fullName'));
-        getStorge.write("email", user.email);
-        getStorge.write("role", documentSnapshot.get('role'));
+        StorageService.setUserId(user.uid);
+        StorageService.setUserName(documentSnapshot.get('fullName'));
+        StorageService.setUserEmail(user.email);
+        StorageService.setUserType(documentSnapshot.get('role'));
+        StorageService.setLoggedIn(true);
         Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
       } else {
         print('Something went wrong');

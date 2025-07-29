@@ -1,28 +1,29 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
-
 import 'package:remindmi/app/services/firestore_db.dart';
 
+enum ParentTaskStatus { incomplete, complete }
+
 class HomeTaskListController extends GetxController {
-  final getStorge = GetStorage();
   final tasks = <Task>[].obs;
+  final ParentTaskStatus taskStatus;
+  
+  HomeTaskListController({this.taskStatus = ParentTaskStatus.incomplete});
 
   @override
   void onInit() {
-    //the task list is fetched and mapped from the below function
-    tasks.bindStream(FireStoreDB().parentGetInCompleteTasks());
-
     super.onInit();
+    _loadTasks();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+  
+  void _loadTasks() {
+    switch (taskStatus) {
+      case ParentTaskStatus.incomplete:
+        tasks.bindStream(FireStoreDB().parentGetInCompleteTasks());
+        break;
+      case ParentTaskStatus.complete:
+        tasks.bindStream(FireStoreDB().parentGetCompleteTasks());
+        break;
+    }
   }
 }

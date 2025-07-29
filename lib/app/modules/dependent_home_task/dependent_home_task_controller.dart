@@ -1,28 +1,29 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
-
 import 'package:remindmi/app/services/firestore_db.dart';
 
+enum TaskStatus { incomplete, complete }
+
 class DependentHomeTaskListController extends GetxController {
-  final getStorge = GetStorage();
   final tasks = <Task>[].obs;
+  final TaskStatus taskStatus;
+  
+  DependentHomeTaskListController({this.taskStatus = TaskStatus.incomplete});
 
   @override
   void onInit() {
-    // All the incompleted task of depedent is loaded on oninit function by dependentHomeGetIncompleteTasks() Method
-    tasks.bindStream(FireStoreDB().dependentHomeGetIncompleteTasks());
-
     super.onInit();
+    _loadTasks();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
+  
+  void _loadTasks() {
+    switch (taskStatus) {
+      case TaskStatus.incomplete:
+        tasks.bindStream(FireStoreDB().dependentHomeGetIncompleteTasks());
+        break;
+      case TaskStatus.complete:
+        tasks.bindStream(FireStoreDB().dependentHomeGetCompleteTasks());
+        break;
+    }
   }
 }
