@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/overdue_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/components/home_page_user_avatar.dart';
@@ -38,13 +39,16 @@ class TaskListCard extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  Text(
-                    row.time + ' ' + row.date,
-                    style: TextStyle(
-                      color: prioritySubTitle(row.priority),
-                      fontSize: 14,
+                  Row(children: [
+                    Text(
+                      row.time + ' ' + row.date,
+                      style: TextStyle(
+                        color: prioritySubTitle(row.priority),
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
+                    OverdueBadge(row: row),
+                  ]),
                   SizedBox(
                     height: 6,
                   ),

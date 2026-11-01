@@ -16,6 +16,7 @@ class EditTaskController extends GetxController {
   var isLoading = false.obs;
   var isSuccess = false.obs;
   var selectedPriority = 'Select Priority'.obs;
+  var remindBefore = 0.obs;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController selectedDate = TextEditingController();
@@ -41,6 +42,7 @@ class EditTaskController extends GetxController {
         (row.priority == 1 ? 'High' : (row.priority == 2 ? 'Medium' : 'Low'));
     selectedDate.text = row.date;
     selectedTime.text = row.time;
+    remindBefore.value = row.remindBefore;
     selectedDependents.addAll(row.depenListString);
   }
 
@@ -93,6 +95,7 @@ class EditTaskController extends GetxController {
                         FireStoreDB.dependentIdsOf(selectedDependents),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
+                    'remindBefore': remindBefore.value,
                     'priority': finalPriority
                   });
                   isLoading.value = false;

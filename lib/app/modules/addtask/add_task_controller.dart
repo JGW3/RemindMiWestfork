@@ -13,6 +13,7 @@ class AddTaskController extends GetxController {
   var isLoading = false.obs;
   var isSuccess = false.obs;
   var selectedPriority = 'Select Priority'.obs;
+  var remindBefore = 0.obs;
   List<String> priorityList = [
     'Select Priority',
     'High',
@@ -81,6 +82,7 @@ class AddTaskController extends GetxController {
                         FireStoreDB.dependentIdsOf(selectedDependents),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
+                    'remindBefore': remindBefore.value,
                     'priority': finalPriority
                   });
                   isLoading.value = false;

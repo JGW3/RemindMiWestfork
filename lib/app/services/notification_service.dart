@@ -98,16 +98,47 @@ class NotificationService {
         ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
+  static int _earlyIdFor(String taskId) => _idFor('$taskId:early');
+
+  // Schedules the due-time reminder and, if remindBefore > 0, an early one.
   static Future<void> scheduleReminder(
     String taskId,
     String name,
-    DateTime dueAt,
-  ) async {
-    final when = tz.TZDateTime.from(dueAt, tz.local);
-    if (when.isBefore(tz.TZDateTime.now(tz.local))) {
-      await cancelReminder(taskId);
-      return;
+    DateTime dueAt, {
+    int remindBefore = 0,
+  }) async {
+    await cancelReminder(taskId);
+    await _scheduleAt(
+      _idFor(taskId),
+      dueAt,
+      'Time to: $name',
+      'Tap to open RemindMi and check it off',
+      taskId,
+    );
+    if (remindBefore > 0) {
+      await _scheduleAt(
+        _earlyIdFor(taskId),
+        dueAt.subtract(Duration(minutes: remindBefore)),
+        'Coming up: $name',
+        'Due in ${_describeMinutes(remindBefore)}',
+        taskId,
+      );
     }
+  }
+
+  static String _describeMinutes(int minutes) => minutes % 60 == 0
+      ? '${minutes ~/ 60} hour${minutes == 60 ? '' : 's'}'
+      : '$minutes minutes';
+
+  static Future<void> _scheduleAt(
+    int id,
+    DateTime at,
+    String title,
+    String body,
+    String payload,
+  ) async {
+    final when = tz.TZDateTime.from(at, tz.local);
+    if (when.isBefore(tz.TZDateTime.now(tz.local))) return;
 
     final android = _plugin
         .resolvePlatformSpecificImplementation<
@@ -118,41 +149,54 @@ class NotificationService {
         await android.canScheduleExactNotifications() == true;
 
     await _plugin.zonedSchedule(
-      id: _idFor(taskId),
+      id: id,
       scheduledDate: when,
       notificationDetails: _details,
       androidScheduleMode: exact
           ? AndroidScheduleMode.exactAllowWhileIdle
           : AndroidScheduleMode.inexactAllowWhileIdle,
-      title: 'Time to: $name',
-      body: 'Tap to open RemindMi and check it off',
-      payload: taskId,
+      title: title,
+      body: body,
+      payload: payload,
     );
   }
 
-  static Future<void> cancelReminder(String taskId) =>
-      _plugin.cancel(id: _idFor(taskId));
+  static Future<void> cancelReminder(String taskId) async {
+    await _plugin.cancel(id: _idFor(taskId));
+    await _plugin.cancel(id: _earlyIdFor(taskId));
+  }
 
   static Future<void> cancelAll() => _plugin.cancelAllPendingNotifications();
 
   // Makes the scheduled reminders exactly match the child's incomplete tasks.
   static Future<void> syncReminders(List<Task> incompleteTasks) async {
     await init();
-    final wanted = {for (final task in incompleteTasks) _idFor(task.id): task};
+    final wanted = {
+      for (final task in incompleteTasks) ...[
+        _idFor(task.id),
+        _earlyIdFor(task.id),
+      ],
+    };
     for (final pending in await _plugin.pendingNotificationRequests()) {
-      if (!wanted.containsKey(pending.id)) {
+      if (!wanted.contains(pending.id)) {
         await _plugin.cancel(id: pending.id);
       }
     }
     for (final task in incompleteTasks) {
       if (task.dueAt != null) {
-        await scheduleReminder(task.id, task.name, task.dueAt!);
+        await scheduleReminder(
+          task.id,
+          task.name,
+          task.dueAt!,
+          remindBefore: task.remindBefore,
+        );
       }
     }
   }
 
   // Data sent by the Cloud Function (functions/index.js):
-  // { action: 'schedule' | 'cancel', taskId, name, date, time, dueAt? (ms) }
+  // { action: 'schedule' | 'cancel', taskId, name, date, time, dueAt? (ms),
+  //   remindBefore? (minutes) }
   static Future<void> handleTaskMessage(Map<String, dynamic> data) async {
     final taskId = data['taskId'];
     if (taskId is! String) return;
@@ -166,7 +210,12 @@ class NotificationService {
         ? DateTime.fromMillisecondsSinceEpoch(ms)
         : parseDue('${data['date']}', '${data['time']}');
     if (dueAt != null) {
-      await scheduleReminder(taskId, '${data['name']}', dueAt);
+      await scheduleReminder(
+        taskId,
+        '${data['name']}',
+        dueAt,
+        remindBefore: int.tryParse('${data['remindBefore']}') ?? 0,
+      );
     }
   }
 

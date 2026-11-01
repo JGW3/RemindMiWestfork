@@ -21,6 +21,7 @@ const dueChanged = (before, after) =>
   before.name !== after.name ||
   before.date !== after.date ||
   before.time !== after.time ||
+  (before.remindBefore ?? 0) !== (after.remindBefore ?? 0) ||
   before.dueAt?.toMillis?.() !== after.dueAt?.toMillis?.();
 
 // FCM data values must all be strings.
@@ -30,6 +31,7 @@ function taskData(action, taskId, task) {
     data.name = task.name ?? "";
     data.date = task.date ?? "";
     data.time = task.time ?? "";
+    data.remindBefore = String(task.remindBefore ?? 0);
     if (task.dueAt) data.dueAt = String(task.dueAt.toMillis());
   }
   return data;
