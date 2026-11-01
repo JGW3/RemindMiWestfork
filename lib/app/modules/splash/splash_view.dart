@@ -16,9 +16,7 @@ class SplashView extends GetView<SplashController> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(
-              height: 307,
-            ),
+            SizedBox(height: 307),
             Align(
               child: Image.asset(
                 'assets/images/remindmi_icon.png',
@@ -30,15 +28,19 @@ class SplashView extends GetView<SplashController> {
 
             Text(
               'RemindMi',
-              style:
-                  GoogleFonts.dmSans(fontSize: 30, fontWeight: FontWeight.w700),
+              style: GoogleFonts.dmSans(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Spacer(),
 
             Text(
               '',
-              style:
-                  GoogleFonts.dmSans(fontSize: 22, fontWeight: FontWeight.w500),
+              style: GoogleFonts.dmSans(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Spacer(),
           ],

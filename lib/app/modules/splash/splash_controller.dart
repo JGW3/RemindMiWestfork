@@ -10,7 +10,7 @@ class SplashController extends GetxController {
     super.onInit();
   }
 
-//Here time for splash screen is fixed
+  //Here time for splash screen is fixed
   @override
   void onReady() {
     super.onReady();

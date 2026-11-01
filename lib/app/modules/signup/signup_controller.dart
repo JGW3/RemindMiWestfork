@@ -58,8 +58,13 @@ class SignupController extends GetxController {
     }
   }
 
-  void signUp(String fullName, String email, String password, String CPassword,
-      String role) async {
+  void signUp(
+    String fullName,
+    String email,
+    String password,
+    String CPassword,
+    String role,
+  ) async {
     //here this functions creats the user id and password by firebase auth package
     isLoading.value = true;
 
@@ -69,35 +74,45 @@ class SignupController extends GetxController {
           if (pass_valid.hasMatch(password)) {
             await _auth
                 .createUserWithEmailAndPassword(
-                    email: email,
-                    password: password.trim().replaceAll(RegExp(r' \s+'), ' '))
+                  email: email,
+                  password: password.trim().replaceAll(RegExp(r' \s+'), ' '),
+                )
                 .then(
-                    (value) => {postDetailsToFirestore(fullName, email, role)})
+                  (value) => {postDetailsToFirestore(fullName, email, role)},
+                )
                 .catchError((e) {
-              if (e.code == 'email-already-in-use') {
-                isLoading.value = false;
+                  if (e.code == 'email-already-in-use') {
+                    isLoading.value = false;
 
-                showCustomSnackBar("User Already Registered", title: "Email");
-              } else if (e.code == 'unknown') {
-                isLoading.value = false;
-                showCustomSnackBar("Please fill all the fields",
-                    title: "Error");
-              } else {
-                isLoading.value = false;
-                showCustomSnackBar(e.code, title: "Error");
-              }
-              return <dynamic>{};
-            });
+                    showCustomSnackBar(
+                      "User Already Registered",
+                      title: "Email",
+                    );
+                  } else if (e.code == 'unknown') {
+                    isLoading.value = false;
+                    showCustomSnackBar(
+                      "Please fill all the fields",
+                      title: "Error",
+                    );
+                  } else {
+                    isLoading.value = false;
+                    showCustomSnackBar(e.code, title: "Error");
+                  }
+                  return <dynamic>{};
+                });
           } else {
             isLoading.value = false;
             showCustomSnackBar(
-                "Password should contain Capital, small letter, Number & special character!",
-                title: "Error");
+              "Password should contain Capital, small letter, Number & special character!",
+              title: "Error",
+            );
           }
         } else {
           isLoading.value = false;
-          showCustomSnackBar("Confirm Password didn't matched !",
-              title: "Error");
+          showCustomSnackBar(
+            "Confirm Password didn't matched !",
+            title: "Error",
+          );
         }
       } else {
         isLoading.value = false;
@@ -105,8 +120,10 @@ class SignupController extends GetxController {
       }
     } else {
       isLoading.value = false;
-      showCustomSnackBar("Please accept the terms and condition first! ",
-          title: "Terms & Condition");
+      showCustomSnackBar(
+        "Please accept the terms and condition first! ",
+        title: "Terms & Condition",
+      );
     }
   }
 
@@ -116,8 +133,12 @@ class SignupController extends GetxController {
     isLoading.value = false;
     showCustomSnackBarSuccess("Account created successfully", title: "success");
 
-    await ref.doc(user!.uid).set(
-        {'parent': '', 'fullName': fullName, 'email': email, 'role': role});
+    await ref.doc(user!.uid).set({
+      'parent': '',
+      'fullName': fullName,
+      'email': email,
+      'role': role,
+    });
 
     isSuccess.value = true;
     Get.offAllNamed(Routes.LOGIN);

@@ -15,8 +15,9 @@ class ForgotPassword_view extends StatefulWidget {
 }
 
 class _ForgotPassword_viewState extends State<ForgotPassword_view> {
-  ForgotPasswordController MyForgotPasswordController =
-      Get.put(ForgotPasswordController());
+  ForgotPasswordController MyForgotPasswordController = Get.put(
+    ForgotPasswordController(),
+  );
   @override
   Widget build(BuildContext context) {
     TextEditingController _emailController = TextEditingController(text: '');
@@ -25,9 +26,7 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 48,
-            ),
+            SizedBox(height: 48),
             Container(
               alignment: Alignment.topLeft,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -38,16 +37,16 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
                 icon: Icon(Icons.arrow_back),
               ),
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
               child: Text(
                 'Forgot',
                 style: GoogleFonts.dmSans(
-                    fontSize: 36.0, fontWeight: FontWeight.w700),
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Container(
@@ -56,35 +55,35 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
               child: Text(
                 'Password',
                 style: GoogleFonts.dmSans(
-                    fontSize: 36.0, fontWeight: FontWeight.w700),
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            SizedBox(
-              height: 36,
-            ),
+            SizedBox(height: 36),
             Container(
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(238, 239, 241, 1),
-                  borderRadius: BorderRadius.circular(8)),
+                color: Color.fromRGBO(238, 239, 241, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
               height: 60,
               width: 398,
               margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextField(
                 style: GoogleFonts.dmSans(
-                    fontSize: 20, fontWeight: FontWeight.w500),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Email ID",
-                    prefixIcon: Icon(
-                      Icons.mail_outline,
-                    )),
+                  border: InputBorder.none,
+                  hintText: "Email ID",
+                  prefixIcon: Icon(Icons.mail_outline),
+                ),
               ),
             ),
-            SizedBox(
-              height: 12,
-            ),
+            SizedBox(height: 12),
             Container(
               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
               width: 398,
@@ -94,10 +93,12 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
                   fillColor: Color.fromRGBO(24, 90, 219, 1.0),
                   elevation: 0.0,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                   onPressed: () {
                     MyForgotPasswordController.sendResetLink(
-                        _emailController.text);
+                      _emailController.text,
+                    );
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +108,7 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
                         CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 1.5,
-                        )
+                        ),
                       ],
                       Container(
                         child: Align(
@@ -115,9 +116,10 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
                           child: Text(
                             "Forgot Password",
                             style: GoogleFonts.dmSans(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w500),
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
@@ -126,32 +128,33 @@ class _ForgotPassword_viewState extends State<ForgotPassword_view> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            SizedBox(height: 24),
             Container(
               child: RichText(
                 text: TextSpan(
                   text: 'Already have an account? ',
                   style: GoogleFonts.dmSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(157, 163, 173, 1)),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromRGBO(157, 163, 173, 1),
+                  ),
                   children: <TextSpan>[
                     TextSpan(
-                        text: 'Sign In',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Get.toNamed(Routes.LOGIN);
-                          },
-                        style: GoogleFonts.dmSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(24, 90, 219, 1))),
+                      text: 'Sign In',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.toNamed(Routes.LOGIN);
+                        },
+                      style: GoogleFonts.dmSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(24, 90, 219, 1),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

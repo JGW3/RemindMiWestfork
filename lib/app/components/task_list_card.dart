@@ -11,11 +11,8 @@ class TaskListCard extends StatelessWidget {
   final int index;
   final getStorge = GetStorage();
 
-  TaskListCard({
-    Key? key,
-    required this.index,
-    required this.row,
-  }) : super(key: key);
+  TaskListCard({Key? key, required this.index, required this.row})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,26 +29,24 @@ class TaskListCard extends StatelessWidget {
               width: 42,
               fit: BoxFit.cover,
             ),
-            SizedBox(
-              width: 18,
-            ),
+            SizedBox(width: 18),
             Expanded(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                  Row(children: [
-                    Text(
-                      row.time + ' ' + row.date,
-                      style: TextStyle(
-                        color: prioritySubTitle(row.priority),
-                        fontSize: 14,
+                      Text(
+                        row.time + ' ' + row.date,
+                        style: TextStyle(
+                          color: prioritySubTitle(row.priority),
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    OverdueBadge(row: row),
-                  ]),
-                  SizedBox(
-                    height: 6,
+                      OverdueBadge(row: row),
+                    ],
                   ),
+                  SizedBox(height: 6),
                   Text(
                     row.name,
                     style: TextStyle(
@@ -69,24 +64,19 @@ class TaskListCard extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  SizedBox(height: 4),
                   if (getStorge.read('role') == 'dependent') ...[
-                    Row(children: [
-                      Text(
-                        'Assigned By:',
-                        style: TextStyle(
-                          color: priorityTitile(row.priority),
+                    Row(
+                      children: [
+                        Text(
+                          'Assigned By:',
+                          style: TextStyle(color: priorityTitile(row.priority)),
                         ),
-                      ),
-                      Text(
-                        row.parentName,
-                        style: TextStyle(
-                          color: priorityTitile(row.priority),
+                        Text(
+                          row.parentName,
+                          style: TextStyle(color: priorityTitile(row.priority)),
                         ),
-                      ),
-                      Padding(
+                        Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Text(
                             "(" +
@@ -97,29 +87,32 @@ class TaskListCard extends StatelessWidget {
                             style: TextStyle(
                               color: priorityTitile(row.priority),
                             ),
-                          ))
-                    ])
+                          ),
+                        ),
+                      ],
+                    ),
                   ] else ...[
                     if (row.dependent == 1) ...[
                       Row(
                         children: [
                           HomePageUserAvatar(),
                           Padding(
-                              padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                              child: Text(
-                                "(" +
-                                    (row.priority == 1
-                                        ? ('High')
-                                        : (row.priority == 2
+                            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                            child: Text(
+                              "(" +
+                                  (row.priority == 1
+                                      ? ('High')
+                                      : (row.priority == 2
                                             ? 'Medium'
                                             : 'Low')) +
-                                    ")",
-                                style: TextStyle(
-                                  color: priorityTitile(row.priority),
-                                ),
-                              ))
+                                  ")",
+                              style: TextStyle(
+                                color: priorityTitile(row.priority),
+                              ),
+                            ),
+                          ),
                         ],
-                      )
+                      ),
                     ] else ...[
                       Row(
                         children: [
@@ -157,40 +150,41 @@ class TaskListCard extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: Text(
-                                "(" +
-                                    (row.priority == 1
-                                        ? ('High')
-                                        : (row.priority == 2
+                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                            child: Text(
+                              "(" +
+                                  (row.priority == 1
+                                      ? ('High')
+                                      : (row.priority == 2
                                             ? 'Medium'
                                             : 'Low')) +
-                                    ")",
-                                style: TextStyle(
-                                  color: priorityTitile(row.priority),
-                                ),
-                              ))
+                                  ")",
+                              style: TextStyle(
+                                color: priorityTitile(row.priority),
+                              ),
+                            ),
+                          ),
                         ],
-                      )
-                    ]
-                  ]
-                ]))
+                      ),
+                    ],
+                  ],
+                ],
+              ),
+            ),
           ],
         ),
         decoration: BoxDecoration(
-            border: Border.all(
-              color: priorityBorder(row.priority),
-              width: 4,
+          border: Border.all(color: priorityBorder(row.priority), width: 4),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 218, 218, 218),
+              blurRadius: 10,
+              offset: Offset(0, 4),
             ),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14.0),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(255, 218, 218, 218),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ]),
+          ],
+        ),
       ),
     );
   }

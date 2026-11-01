@@ -12,18 +12,18 @@ class TermsAndConditionView extends GetView<TermsAndConditionController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 48,
-            ),
+            SizedBox(height: 48),
             Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: new IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(Icons.arrow_back))),
-            TermsAndCondtions()
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: new IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: Icon(Icons.arrow_back),
+              ),
+            ),
+            TermsAndCondtions(),
           ],
         ),
         //

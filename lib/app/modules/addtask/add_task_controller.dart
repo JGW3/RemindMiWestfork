@@ -14,12 +14,7 @@ class AddTaskController extends GetxController {
   var isSuccess = false.obs;
   var selectedPriority = 'Select Priority'.obs;
   var remindBefore = 0.obs;
-  List<String> priorityList = [
-    'Select Priority',
-    'High',
-    'Medium',
-    'Low',
-  ];
+  List<String> priorityList = ['Select Priority', 'High', 'Medium', 'Low'];
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   TextEditingController selectedDate = TextEditingController();
   TextEditingController selectedTime = TextEditingController();
@@ -69,8 +64,8 @@ class AddTaskController extends GetxController {
                   } else {
                     finalPriority = 3;
                   }
-                  CollectionReference ref =
-                      FirebaseFirestore.instance.collection('tasks');
+                  CollectionReference ref = FirebaseFirestore.instance
+                      .collection('tasks');
                   await ref.add({
                     'parent': getStorge.read('id'),
                     'parentName': getStorge.read('fullName'),
@@ -78,23 +73,28 @@ class AddTaskController extends GetxController {
                     'description': taskDescription,
                     'date': selectedDate.text,
                     'dependent': selectedDependents,
-                    'dependentIds':
-                        FireStoreDB.dependentIdsOf(selectedDependents),
+                    'dependentIds': FireStoreDB.dependentIdsOf(
+                      selectedDependents,
+                    ),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
                     'remindBefore': remindBefore.value,
-                    'priority': finalPriority
+                    'priority': finalPriority,
                   });
                   isLoading.value = false;
-                  showCustomSnackBarSuccess("Task added successfully",
-                      title: "success");
+                  showCustomSnackBarSuccess(
+                    "Task added successfully",
+                    title: "success",
+                  );
                   isSuccess.value = true;
                   reset();
                   Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
                 } catch (e) {
                   isLoading.value = false;
-                  showCustomSnackBar('Unexpected error occured',
-                      title: "Error");
+                  showCustomSnackBar(
+                    'Unexpected error occured',
+                    title: "Error",
+                  );
                 }
               } else {
                 isLoading.value = false;

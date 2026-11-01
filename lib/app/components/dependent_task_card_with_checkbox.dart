@@ -18,15 +18,17 @@ class DependentTaskCardWithCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DependentTaskCardWithCheckbox> createState() => _DependentTaskCardWithCheckboxState();
+  State<DependentTaskCardWithCheckbox> createState() =>
+      _DependentTaskCardWithCheckboxState();
 }
 
-class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithCheckbox> {
+class _DependentTaskCardWithCheckboxState
+    extends State<DependentTaskCardWithCheckbox> {
   bool isCompleting = false;
 
   Future<void> completeTask() async {
     if (isCompleting) return;
-    
+
     setState(() {
       isCompleting = true;
     });
@@ -34,9 +36,15 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
     try {
       await FireStoreDB().completeTask(widget.row.id);
 
-      showCustomSnackBarSuccess("Task completed successfully!", title: "Great job!");
+      showCustomSnackBarSuccess(
+        "Task completed successfully!",
+        title: "Great job!",
+      );
     } catch (e) {
-      showCustomSnackBar('Error completing task: ${e.toString()}', title: "Error");
+      showCustomSnackBar(
+        'Error completing task: ${e.toString()}',
+        title: "Error",
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -75,14 +83,12 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.green,
+                          ),
                         ),
                       )
-                    : Icon(
-                        Icons.check,
-                        color: Colors.green,
-                        size: 20,
-                      ),
+                    : Icon(Icons.check, color: Colors.green, size: 20),
               ),
             ),
             SizedBox(width: 12),
@@ -97,16 +103,18 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text(
-                      widget.row.time + ' ' + widget.row.date,
-                      style: TextStyle(
-                        color: prioritySubTitle(widget.row.priority),
-                        fontSize: 14,
+                  Row(
+                    children: [
+                      Text(
+                        widget.row.time + ' ' + widget.row.date,
+                        style: TextStyle(
+                          color: prioritySubTitle(widget.row.priority),
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    OverdueBadge(row: widget.row),
-                  ]),
+                      OverdueBadge(row: widget.row),
+                    ],
+                  ),
                   SizedBox(height: 6),
                   Text(
                     widget.row.name,
@@ -126,37 +134,41 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
                     ),
                   ),
                   SizedBox(height: 4),
-                  Row(children: [
-                    Text(
-                      'Assigned By: ',
-                      style: TextStyle(
-                        color: priorityTitile(widget.row.priority),
-                      ),
-                    ),
-                    Text(
-                      widget.row.parentName,
-                      style: TextStyle(
-                        color: priorityTitile(widget.row.priority),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Text(
-                        "(" +
-                            (widget.row.priority == 1
-                                ? ('High')
-                                : (widget.row.priority == 2 ? 'Medium' : 'Low')) +
-                            ")",
+                  Row(
+                    children: [
+                      Text(
+                        'Assigned By: ',
                         style: TextStyle(
                           color: priorityTitile(widget.row.priority),
                         ),
                       ),
-                    )
-                  ])
+                      Text(
+                        widget.row.parentName,
+                        style: TextStyle(
+                          color: priorityTitile(widget.row.priority),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          "(" +
+                              (widget.row.priority == 1
+                                  ? ('High')
+                                  : (widget.row.priority == 2
+                                        ? 'Medium'
+                                        : 'Low')) +
+                              ")",
+                          style: TextStyle(
+                            color: priorityTitile(widget.row.priority),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
         decoration: BoxDecoration(
@@ -171,7 +183,7 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
               color: Color.fromARGB(255, 218, 218, 218),
               blurRadius: 10,
               offset: Offset(0, 4),
-            )
+            ),
           ],
         ),
       ),

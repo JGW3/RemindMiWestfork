@@ -16,9 +16,7 @@ class _SettingViewState extends State<SettingView> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 226, 226),
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.grey,
-        ),
+        iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
         toolbarHeight: 100,
         elevation: 0,
@@ -33,11 +31,7 @@ class _SettingViewState extends State<SettingView> {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 12,
-            ),
-          ),
+          SliverToBoxAdapter(child: SizedBox(height: 12)),
           SliverToBoxAdapter(
             child: ManageCard(
               icon: Icons.edit,

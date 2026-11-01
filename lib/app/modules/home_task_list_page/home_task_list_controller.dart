@@ -8,7 +8,7 @@ enum ParentTaskStatus { incomplete, complete }
 class HomeTaskListController extends GetxController {
   final tasks = <Task>[].obs;
   final ParentTaskStatus taskStatus;
-  
+
   HomeTaskListController({this.taskStatus = ParentTaskStatus.incomplete});
 
   @override
@@ -16,13 +16,14 @@ class HomeTaskListController extends GetxController {
     super.onInit();
     _loadTasks();
   }
-  
+
   void _loadTasks() {
     switch (taskStatus) {
       case ParentTaskStatus.incomplete:
         tasks.bindStream(FireStoreDB().parentGetInCompleteTasks());
         FireStoreDB().backfillParentTasks().catchError(
-            (e) => debugPrint('Task backfill failed: $e'));
+          (e) => debugPrint('Task backfill failed: $e'),
+        );
         break;
       case ParentTaskStatus.complete:
         tasks.bindStream(FireStoreDB().parentGetCompleteTasks());

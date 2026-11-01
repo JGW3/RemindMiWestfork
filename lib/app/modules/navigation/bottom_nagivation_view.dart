@@ -7,8 +7,9 @@ import 'package:remindmi/app/modules/manage/manage_view.dart';
 import 'package:remindmi/app/modules/navigation/bottom_navigation_controller.dart';
 
 class BottomNavigationView extends StatelessWidget {
-  final BottomNavigationController bottomNavigationBarController =
-      Get.put(BottomNavigationController());
+  final BottomNavigationController bottomNavigationBarController = Get.put(
+    BottomNavigationController(),
+  );
   BottomNavigationView({Key? key}) : super(key: key);
   final getStorge = GetStorage();
 
@@ -21,8 +22,9 @@ class BottomNavigationView extends StatelessWidget {
       return Scaffold(
         body: Obx(
           () => IndexedStack(
-              index: bottomNavigationBarController.selectedIndex.value,
-              children: screens),
+            index: bottomNavigationBarController.selectedIndex.value,
+            children: screens,
+          ),
         ),
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
@@ -37,18 +39,12 @@ class BottomNavigationView extends StatelessWidget {
             currentIndex: bottomNavigationBarController.selectedIndex.value,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home_filled,
-                  size: 34,
-                ),
+                icon: Icon(Icons.home_filled, size: 34),
                 label: 'Home',
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.manage_accounts,
-                  size: 34,
-                ),
+                icon: Icon(Icons.manage_accounts, size: 34),
                 label: 'Manage',
                 backgroundColor: Colors.white,
               ),
@@ -60,8 +56,9 @@ class BottomNavigationView extends StatelessWidget {
       return Scaffold(
         body: Obx(
           () => IndexedStack(
-              index: bottomNavigationBarController.selectedIndex.value,
-              children: dependentscreens),
+            index: bottomNavigationBarController.selectedIndex.value,
+            children: dependentscreens,
+          ),
         ),
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
@@ -76,18 +73,12 @@ class BottomNavigationView extends StatelessWidget {
             currentIndex: bottomNavigationBarController.selectedIndex.value,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home_filled,
-                  size: 34,
-                ),
+                icon: Icon(Icons.home_filled, size: 34),
                 label: 'Home',
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.manage_accounts,
-                  size: 34,
-                ),
+                icon: Icon(Icons.manage_accounts, size: 34),
                 label: 'Manage',
                 backgroundColor: Colors.white,
               ),

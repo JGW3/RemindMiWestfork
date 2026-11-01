@@ -13,19 +13,12 @@ class HomePageUserAvatar extends StatelessWidget {
         color: Colors.blue,
         child: Center(
           child: CircleAvatar(
-            backgroundColor: Color.fromARGB(
-              255,
-              101,
-              152,
-              254,
-            ),
+            backgroundColor: Color.fromARGB(255, 101, 152, 254),
             radius: 30,
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 11,
-              child: Image.asset(
-                'assets/images/child.png',
-              ),
+              child: Image.asset('assets/images/child.png'),
             ),
           ),
         ),

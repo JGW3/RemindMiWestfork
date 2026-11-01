@@ -5,8 +5,6 @@ import 'landingPage_controller.dart';
 class LandingPageBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LandingPageController>(
-      () => LandingPageController(),
-    );
+    Get.lazyPut<LandingPageController>(() => LandingPageController());
   }
 }

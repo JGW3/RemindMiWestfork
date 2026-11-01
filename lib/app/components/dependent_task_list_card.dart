@@ -10,10 +10,7 @@ class DependentTaskListCard extends StatelessWidget {
 
   final int index;
 
-  DependentTaskListCard({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
+  DependentTaskListCard({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +27,7 @@ class DependentTaskListCard extends StatelessWidget {
               width: 42,
               fit: BoxFit.cover,
             ),
-            SizedBox(
-              width: 16,
-            ),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,18 +38,18 @@ class DependentTaskListCard extends StatelessWidget {
                         home_task_list_controller.tasks[index].date,
                     style: TextStyle(
                       color: prioritySubTitle(
-                          home_task_list_controller.tasks[index].priority),
+                        home_task_list_controller.tasks[index].priority,
+                      ),
                       fontSize: 10,
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  SizedBox(height: 4),
                   Text(
                     home_task_list_controller.tasks[index].name,
                     style: TextStyle(
                       color: priorityTitile(
-                          home_task_list_controller.tasks[index].priority),
+                        home_task_list_controller.tasks[index].priority,
+                      ),
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -65,34 +60,35 @@ class DependentTaskListCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: prioritySubTitle(
-                          home_task_list_controller.tasks[index].priority),
+                        home_task_list_controller.tasks[index].priority,
+                      ),
                       fontSize: 12,
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  HomePageUserAvatar()
+                  SizedBox(height: 4),
+                  HomePageUserAvatar(),
                 ],
               ),
-            )
+            ),
           ],
         ),
         decoration: BoxDecoration(
-            border: Border.all(
-              color: priorityBorder(
-                  home_task_list_controller.tasks[index].priority),
-              // width: 2,
+          border: Border.all(
+            color: priorityBorder(
+              home_task_list_controller.tasks[index].priority,
             ),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(255, 218, 218, 218),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ]),
+            // width: 2,
+          ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 218, 218, 218),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
       ),
     );
   }

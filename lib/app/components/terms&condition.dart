@@ -9,14 +9,14 @@ class TermsAndCondtions extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(
-            height: 18,
-          ),
+          SizedBox(height: 18),
           Container(
             child: Text(
               'Terms & Conditons',
               style: GoogleFonts.dmSans(
-                  fontSize: 30.0, fontWeight: FontWeight.w700),
+                fontSize: 30.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           Container(
@@ -36,7 +36,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Grant of License ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -54,7 +56,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Restrictions on Use  ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -72,7 +76,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Title and Ownership   ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -90,7 +96,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Compliance with the Law   ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -108,7 +116,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Limitation of Liability  ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -126,7 +136,9 @@ class TermsAndCondtions extends StatelessWidget {
                       child: Text(
                         'Termination',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -143,9 +155,7 @@ class TermsAndCondtions extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 28,
-          ),
+          SizedBox(height: 28),
         ],
       ),
     );

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:remindmi/constants/images.dart';
 
 class CustomCachedNetworkImage extends StatelessWidget {
-  const CustomCachedNetworkImage(
-      {required this.url,
-      required this.fit,
-      this.height,
-      this.width,
-      this.color,
-      this.placeholder,
-      this.placeholderFit});
+  const CustomCachedNetworkImage({
+    required this.url,
+    required this.fit,
+    this.height,
+    this.width,
+    this.color,
+    this.placeholder,
+    this.placeholderFit,
+  });
 
   final String url;
   final BoxFit fit;

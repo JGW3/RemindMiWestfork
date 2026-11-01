@@ -23,23 +23,19 @@ class EditTaskController extends GetxController {
   TextEditingController selectedTime = TextEditingController();
   final dependents = <Dependent>[].obs;
   List selectedDependents = [].obs;
-  List<String> priorityList = [
-    'Select Priority',
-    'High',
-    'Medium',
-    'Low',
-  ];
+  List<String> priorityList = ['Select Priority', 'High', 'Medium', 'Low'];
 
   @override
   void onInit() {
     super.onInit();
 
-// preloaded data while clicking edit is done on oninit ...
+    // preloaded data while clicking edit is done on oninit ...
     dependents.bindStream(FireStoreDB().getAllDependentAddTask());
     nameController.text = row.name;
     descriptionController.text = row.description;
-    selectedPriority.value =
-        (row.priority == 1 ? 'High' : (row.priority == 2 ? 'Medium' : 'Low'));
+    selectedPriority.value = (row.priority == 1
+        ? 'High'
+        : (row.priority == 2 ? 'Medium' : 'Low'));
     selectedDate.text = row.date;
     selectedTime.text = row.time;
     remindBefore.value = row.remindBefore;
@@ -91,23 +87,28 @@ class EditTaskController extends GetxController {
                     'description': taskDescription,
                     'date': selectedDate.text,
                     'dependent': selectedDependents,
-                    'dependentIds':
-                        FireStoreDB.dependentIdsOf(selectedDependents),
+                    'dependentIds': FireStoreDB.dependentIdsOf(
+                      selectedDependents,
+                    ),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
                     'remindBefore': remindBefore.value,
-                    'priority': finalPriority
+                    'priority': finalPriority,
                   });
                   isLoading.value = false;
-                  showCustomSnackBarSuccess("Task edited successfully",
-                      title: "success");
+                  showCustomSnackBarSuccess(
+                    "Task edited successfully",
+                    title: "success",
+                  );
                   isSuccess.value = true;
                   reset();
                   Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
                 } catch (e) {
                   isLoading.value = false;
-                  showCustomSnackBar('Unexpected error occured',
-                      title: "Error");
+                  showCustomSnackBar(
+                    'Unexpected error occured',
+                    title: "Error",
+                  );
                 }
               } else {
                 isLoading.value = false;
