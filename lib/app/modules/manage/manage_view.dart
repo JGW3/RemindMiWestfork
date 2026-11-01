@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:remindmi/app/services/notification_service.dart';
 import 'package:remindmi/app/modules/accessibility/accessibility_view.dart';
 import 'package:remindmi/app/modules/addDependent/add_dependent_view.dart';
 import 'package:remindmi/app/modules/all_task_list/all_task_list_view.dart';
@@ -178,6 +179,7 @@ class _ManageViewState extends State<ManageView> {
                   icon: Icons.logout_sharp,
                   title: 'Sign out',
                   onTap: () async {
+                    await NotificationService.unregister();
                     await FirebaseAuth.instance.signOut();
                     getStorage.erase();
                     Get.deleteAll();

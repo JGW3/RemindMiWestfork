@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
 import 'package:remindmi/app/services/firestore_db.dart';
+import 'package:remindmi/app/services/notification_service.dart';
 
 enum TaskStatus { incomplete, complete }
 
@@ -20,6 +21,8 @@ class DependentHomeTaskListController extends GetxController {
     switch (taskStatus) {
       case TaskStatus.incomplete:
         tasks.bindStream(FireStoreDB().dependentHomeGetIncompleteTasks());
+        // Keep this phone's scheduled reminders in step with the task list
+        ever(tasks, NotificationService.syncReminders);
         break;
       case TaskStatus.complete:
         tasks.bindStream(FireStoreDB().dependentHomeGetCompleteTasks());
