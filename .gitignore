@@ -45,3 +45,6 @@ app.*.map.json
 
 # Cloud Functions
 /functions/node_modules/
+
+# Firebase emulator logs
+*-debug.log

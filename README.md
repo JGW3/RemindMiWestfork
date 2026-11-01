@@ -30,6 +30,12 @@ Everyone has an avatar: an emoji on a color, or a photo. You can change your own
 
 Photos are shrunk to 256px and stored in the user's Firestore profile, so Firebase Storage isn't needed.
 
+### Managing children
+
+On *Add Dependent*, tap a child to change their avatar, rename them, set a new password, or remove them. Removing a child deletes their account and takes them off every task; a turn-taking task they were holding passes to the next child. *Settings → Edit Profile* renames you, and *Settings → Delete Profile* deletes your account (for a parent, the whole family).
+
+Password resets, removal and account deletion run as Cloud Functions (`functions/children.js`), since the app can't change someone else's login. They need step 4 below.
+
 ### Reminders and notifications
 
 - **Due-time reminder (child's phone):** each incomplete task gets a local notification at its due time, plus an optional early one (5, 15, 30 or 60 minutes before, picked per task). These work offline and survive reboots, and they stay in step with the task list whenever the app is open.
@@ -86,6 +92,15 @@ firebase deploy --only functions
 ```
 
 **iOS push** additionally needs an APNs key uploaded under Firebase console → Project settings → Cloud Messaging, plus the *Push Notifications* capability enabled for the Runner target in Xcode. Background mode `remote-notification` is already in `Info.plist`.
+
+### Testing
+
+```bash
+flutter test                  # Dart unit tests
+cd functions && npm test      # security rules + Cloud Functions on the Firebase emulators
+```
+
+The emulator tests need Java 21+ and use a throwaway `demo-remindmi` project, so they never touch real data.
 
 ### 5. Run
 
@@ -146,7 +161,6 @@ tasks/{taskId}
 - The Overdue tag appears the next time the list redraws, not the exact moment the due time passes.
 - iOS treats silent pushes as low priority, so an edited due time may not reach an iPhone until the child opens the app.
 - Tested so far: `flutter analyze` and unit tests only. Not yet run on a real device.
-- Children can't be edited or removed from the app yet ("Edit profile" and "Delete profile" are placeholders).
 
 ## Tech stack
 

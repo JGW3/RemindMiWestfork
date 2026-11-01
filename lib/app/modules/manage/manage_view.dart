@@ -1,10 +1,9 @@
+import 'package:remindmi/app/helper/session.dart';
 import 'package:remindmi/app/modules/avatar/avatar_editor_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:remindmi/app/services/notification_service.dart';
 import 'package:remindmi/app/modules/accessibility/accessibility_view.dart';
 import 'package:remindmi/app/modules/addDependent/add_dependent_view.dart';
 import 'package:remindmi/app/modules/all_task_list/all_task_list_view.dart';
@@ -12,7 +11,6 @@ import 'package:remindmi/app/modules/manage/managepages/credits.dart';
 import 'package:remindmi/app/modules/setting/setting_view.dart';
 import 'package:remindmi/app/modules/terms_and_condition/terms_and_condition_view.dart';
 import 'package:remindmi/app/modules/privacy_policy/privacy_policy_view.dart';
-import 'package:remindmi/app/routes/app_pages.dart';
 import 'package:remindmi/app/widget/manage_card.dart';
 
 class ManageView extends StatefulWidget {
@@ -188,13 +186,7 @@ class _ManageViewState extends State<ManageView> {
               child: ManageCard(
                 icon: Icons.logout_sharp,
                 title: 'Sign out',
-                onTap: () async {
-                  await NotificationService.unregister();
-                  await FirebaseAuth.instance.signOut();
-                  getStorage.erase();
-                  Get.deleteAll();
-                  Get.offAllNamed(Routes.LANDINGPAGE);
-                },
+                onTap: () => signOut(),
               ),
             ),
           ],
