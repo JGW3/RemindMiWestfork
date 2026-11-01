@@ -46,8 +46,9 @@ class EditTaskController extends GetxController {
     if (row.rotation.isNotEmpty) {
       // Turn-taking tasks only list the current holder; show the whole rotation
       takeTurns.value = true;
-      selectedDependents.addAll(row.rotation
-          .map((id) => {'dep': id, 'depName': '', 'status': false}));
+      selectedDependents.addAll(
+        row.rotation.map((id) => {'dep': id, 'depName': '', 'status': false}),
+      );
     } else {
       selectedDependents.addAll(row.depenListString);
     }

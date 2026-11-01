@@ -1,3 +1,4 @@
+import 'package:remindmi/app/services/accessibility_service.dart';
 import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -175,6 +176,7 @@ class _DependentTaskCardWithCheckboxState
                 ],
               ),
             ),
+            ReadAloudButton(text: spokenTask(widget.row)),
           ],
         ),
         decoration: BoxDecoration(

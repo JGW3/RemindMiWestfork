@@ -7,11 +7,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:remindmi/app/routes/app_pages.dart';
+import 'package:remindmi/app/services/accessibility_service.dart';
 import 'package:remindmi/app/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  await GetStorage.init(AccessibilityService.boxName);
+  Get.put(AccessibilityService(), permanent: true);
 
   await Firebase.initializeApp(
     //options: const FirebaseOptions(
@@ -44,6 +47,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
+      builder: AccessibilityService.apply,
     );
   }
 }

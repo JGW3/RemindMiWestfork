@@ -10,6 +10,7 @@ const remindBeforeOptions = {
 const repeatOptions = {
   'none': 'Does not repeat',
   'daily': 'Repeats every day',
+  'everyOtherDay': 'Repeats every 2 days',
   'weekdays': 'Repeats on weekdays',
   'weekly': 'Repeats every week',
   'asNeeded': 'Whenever it\'s needed (no due time)',
@@ -22,6 +23,7 @@ const takeTurnsOptions = {
 
 const repeatShortLabels = {
   'daily': 'Daily',
+  'everyOtherDay': 'Every 2 days',
   'weekdays': 'Weekdays',
   'weekly': 'Weekly',
   'asNeeded': 'As needed',
@@ -39,7 +41,11 @@ DateTime nextOccurrence(DateTime due, String repeat, DateTime now) {
   do {
     // Building from y/m/d (not adding a Duration) keeps the wall-clock time
     // the same across daylight-saving changes.
-    final step = repeat == 'weekly' ? 7 : 1;
+    final step = switch (repeat) {
+      'weekly' => 7,
+      'everyOtherDay' => 2,
+      _ => 1,
+    };
     next = DateTime(
       next.year,
       next.month,

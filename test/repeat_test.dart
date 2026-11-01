@@ -23,6 +23,13 @@ void main() {
       );
     });
 
+    test('every 2 days skips a day', () {
+      expect(
+        nextOccurrence(due, 'everyOtherDay', DateTime(2026, 11, 2, 19)),
+        DateTime(2026, 11, 4, 18),
+      );
+    });
+
     test('weekdays skips the weekend', () {
       final friday = DateTime(2026, 11, 6, 18);
       expect(

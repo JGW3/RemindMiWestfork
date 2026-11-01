@@ -2,6 +2,12 @@
     <!-- Scheduled task reminders (flutter_local_notifications) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <!-- Lets "Read aloud" find the phone's text-to-speech engine -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
     <!--android:installLocation="preferExternal"-->
    <application
         android:label="remindmi"
