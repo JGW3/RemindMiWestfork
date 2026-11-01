@@ -1,3 +1,4 @@
+import 'package:remindmi/app/modules/code_sign_in/code_sign_in_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -186,7 +187,22 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            SizedBox(height: 36),
+            SizedBox(height: 20),
+            Align(
+              alignment: Alignment.center,
+              child: TextButton.icon(
+                onPressed: () => Get.to(() => CodeSignInView()),
+                icon: Icon(Icons.qr_code_scanner),
+                label: Text(
+                  'Sign in with a code',
+                  style: GoogleFonts.dmSans(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
             Align(
               alignment: Alignment.center,
               child: RichText(

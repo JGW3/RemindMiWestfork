@@ -70,6 +70,8 @@ async function removeFromTasks(parent, childUid, batch) {
   }
 }
 
+exports.requireChildOf = requireChildOf;
+
 exports.setChildPassword = onCall(async (request) => {
   const {childUid} = await requireChildOf(request);
   const password = request.data?.password;

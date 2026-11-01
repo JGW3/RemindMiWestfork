@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/modules/avatar/avatar_editor_view.dart';
+import 'package:remindmi/app/modules/code_sign_in/sign_in_code_view.dart';
 import 'package:remindmi/app/services/firestore_db.dart';
 
 // Readable message for errors from callable Cloud Functions.
@@ -78,6 +79,15 @@ void showChildOptions(String childUid, String name) {
             onTap: () {
               Get.back();
               Get.to(() => AvatarEditorView(uid: childUid, name: name));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.qr_code_2),
+            title: Text('Sign in a phone'),
+            subtitle: Text('Show a QR code for $name\'s phone to scan'),
+            onTap: () {
+              Get.back();
+              Get.to(() => SignInCodeView(childUid: childUid, name: name));
             },
           ),
           ListTile(

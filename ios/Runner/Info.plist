@@ -50,7 +50,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Pick a photo for your RemindMi avatar.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Take a photo for your RemindMi avatar.</string>
+	<string>Take an avatar photo, or scan a sign-in code from a parent's phone.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

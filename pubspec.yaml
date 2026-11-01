@@ -54,6 +54,8 @@ dependencies:
   firebase_messaging: ^16.7.1
   image_picker: ^1.2.4
   cloud_functions: ^6.5.1
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.4.3
 
 dev_dependencies:
   flutter_test:

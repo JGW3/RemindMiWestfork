@@ -97,3 +97,9 @@ test("parents can't give tasks to another family", async () => {
   await assertFails(updateDoc(doc(as("mom"), "tasks/dishes"), {parent: "eve"}));
   await assertFails(setDoc(doc(as("eve"), "tasks/sneaky"), {parent: "mom"}));
 });
+
+test("sign-in codes are server-only", async () => {
+  await db.doc("signInCodes/ABCDEFGH").set({child: "sam", parent: "mom"});
+  await assertFails(getDoc(doc(as("mom"), "signInCodes/ABCDEFGH")));
+  await assertFails(setDoc(doc(as("mom"), "signInCodes/ZZZZZZZZ"), {child: "eve"}));
+});

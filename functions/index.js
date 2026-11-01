@@ -17,7 +17,10 @@ initializeApp();
 const db = getFirestore();
 
 // Callables for managing children (password reset, removal, account deletion)
-Object.assign(exports, require("./children"));
+const {requireChildOf, ...children} = require("./children");
+Object.assign(exports, children);
+// One-time QR / code sign-in for children's phones
+Object.assign(exports, require("./signin"));
 
 const statusByDep = (task) =>
   new Map((task?.dependent ?? []).map((d) => [d.dep, d]));
