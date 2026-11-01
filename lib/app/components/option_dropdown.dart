@@ -2,34 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Minutes before the due time for the early reminder; 0 = only at due time
-const remindBeforeOptions = {
-  0: 'Remind at due time',
-  5: 'Remind 5 min before',
-  15: 'Remind 15 min before',
-  30: 'Remind 30 min before',
-  60: 'Remind 1 hour before',
-};
+// Dropdown bound to an Rx value, styled like the task form's priority picker.
+class OptionDropdown<T> extends StatelessWidget {
+  final Rx<T> value;
+  final Map<T, String> options;
 
-class RemindBeforeDropdown extends StatelessWidget {
-  final RxInt value;
-
-  const RemindBeforeDropdown({Key? key, required this.value}) : super(key: key);
+  const OptionDropdown({Key? key, required this.value, required this.options})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
         margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-        child: DropdownButton<int>(
+        child: DropdownButton<T>(
           borderRadius: BorderRadius.circular(8.0),
           iconEnabledColor: Color.fromARGB(255, 101, 152, 254),
           underline: SizedBox(),
           isExpanded: true,
-          // Tasks saved with a value not in the list fall back to "at due time"
-          value: remindBeforeOptions.containsKey(value.value) ? value.value : 0,
+          // A stored value that isn't offered any more falls back to the first option
+          value: options.containsKey(value.value)
+              ? value.value
+              : options.keys.first,
           items: [
-            for (final option in remindBeforeOptions.entries)
+            for (final option in options.entries)
               DropdownMenuItem(
                 value: option.key,
                 child: Text(
@@ -41,7 +37,9 @@ class RemindBeforeDropdown extends StatelessWidget {
                 ),
               ),
           ],
-          onChanged: (newValue) => value.value = newValue ?? 0,
+          onChanged: (newValue) {
+            if (newValue != null) value.value = newValue;
+          },
         ),
         decoration: BoxDecoration(
           border: Border.all(color: Color.fromARGB(255, 101, 152, 254)),

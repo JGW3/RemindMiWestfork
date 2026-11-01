@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:remindmi/app/helper/assignment.dart';
 import 'package:remindmi/app/helper/due_date.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/models/add_task_dependent_list_model.dart';
@@ -17,6 +18,8 @@ class EditTaskController extends GetxController {
   var isSuccess = false.obs;
   var selectedPriority = 'Select Priority'.obs;
   var remindBefore = 0.obs;
+  var repeat = 'none'.obs;
+  var takeTurns = false.obs;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController selectedDate = TextEditingController();
@@ -39,7 +42,15 @@ class EditTaskController extends GetxController {
     selectedDate.text = row.date;
     selectedTime.text = row.time;
     remindBefore.value = row.remindBefore;
-    selectedDependents.addAll(row.depenListString);
+    repeat.value = row.repeat;
+    if (row.rotation.isNotEmpty) {
+      // Turn-taking tasks only list the current holder; show the whole rotation
+      takeTurns.value = true;
+      selectedDependents.addAll(row.rotation
+          .map((id) => {'dep': id, 'depName': '', 'status': false}));
+    } else {
+      selectedDependents.addAll(row.depenListString);
+    }
   }
 
   @override
@@ -65,8 +76,8 @@ class EditTaskController extends GetxController {
     if (taskName != '') {
       if (taskDescription != '') {
         if (selectedPriority.value != 'Select Priority') {
-          if (selectedDate.text != '') {
-            if (selectedTime.text != '') {
+          if (selectedDate.text != '' || repeat.value == 'asNeeded') {
+            if (selectedTime.text != '' || repeat.value == 'asNeeded') {
               if (selectedDependents.isNotEmpty) {
                 try {
                   var finalPriority;
@@ -86,15 +97,18 @@ class EditTaskController extends GetxController {
                     'name': taskName,
                     'description': taskDescription,
                     'date': selectedDate.text,
-                    'dependent': selectedDependents,
-                    'dependentIds': FireStoreDB.dependentIdsOf(
-                      selectedDependents,
+                    ...assignmentFields(
+                      selected: selectedDependents,
+                      dependents: dependents,
+                      takeTurns: takeTurns.value && repeat.value != 'none',
+                      existing: row,
                     ),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
                     'remindBefore': remindBefore.value,
+                    'repeat': repeat.value,
                     'priority': finalPriority,
-                  });
+                  }, SetOptions(merge: true));
                   isLoading.value = false;
                   showCustomSnackBarSuccess(
                     "Task edited successfully",

@@ -1,4 +1,5 @@
-import 'package:remindmi/app/components/remind_before_dropdown.dart';
+import 'package:remindmi/app/components/option_dropdown.dart';
+import 'package:remindmi/app/helper/task_options.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -219,7 +220,26 @@ class EditTaskView extends StatelessWidget {
               ],
             ),
             SizedBox(height: 25),
-            RemindBeforeDropdown(value: editTaskController.remindBefore),
+            OptionDropdown(
+              value: editTaskController.remindBefore,
+              options: remindBeforeOptions,
+            ),
+            SizedBox(height: 16),
+            OptionDropdown(
+              value: editTaskController.repeat,
+              options: repeatOptions,
+            ),
+            Obx(
+              () => editTaskController.repeat.value == 'none'
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: OptionDropdown(
+                        value: editTaskController.takeTurns,
+                        options: takeTurnsOptions,
+                      ),
+                    ),
+            ),
             SizedBox(height: 25),
             Container(
               alignment: Alignment.centerLeft,

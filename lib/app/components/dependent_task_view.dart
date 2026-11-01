@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -167,7 +168,7 @@ class DependentTaskViewCard extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
             alignment: Alignment.centerLeft,
             child: Text(
-              row.time + ',' + row.date,
+              dueText(row, separator: ', '),
               style: GoogleFonts.dmSans(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
@@ -175,6 +176,7 @@ class DependentTaskViewCard extends StatelessWidget {
               ),
             ),
           ),
+          CompletionHistory(row: row),
           Container(
             margin: EdgeInsets.fromLTRB(16, 47, 16, 43),
             child: Row(

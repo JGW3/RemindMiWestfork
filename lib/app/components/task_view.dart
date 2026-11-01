@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -262,7 +263,7 @@ class TaskViewCard extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
               alignment: Alignment.centerLeft,
               child: Text(
-                row.time + ',' + row.date,
+                dueText(row, separator: ', '),
                 style: GoogleFonts.dmSans(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w400,
@@ -270,6 +271,7 @@ class TaskViewCard extends StatelessWidget {
                 ),
               ),
             ),
+            CompletionHistory(row: row),
             if (from == 'home') ...[
               Container(
                 margin: EdgeInsets.fromLTRB(16, 47, 16, 43),
