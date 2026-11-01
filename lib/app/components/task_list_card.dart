@@ -98,7 +98,11 @@ class TaskListCard extends StatelessWidget {
                     if (row.dependent == 1) ...[
                       Row(
                         children: [
-                          HomePageUserAvatar(),
+                          HomePageUserAvatar(
+                            uid: row.dependentList.isEmpty
+                                ? null
+                                : row.dependentList.first.dep,
+                          ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
                             child: Text(
@@ -122,7 +126,11 @@ class TaskListCard extends StatelessWidget {
                           Stack(
                             clipBehavior: Clip.none,
                             children: <Widget>[
-                              HomePageUserAvatar(),
+                              HomePageUserAvatar(
+                                uid: row.dependentList.isEmpty
+                                    ? null
+                                    : row.dependentList.first.dep,
+                              ),
                               new Positioned(
                                 left: 15.0,
                                 child: ClipRRect(

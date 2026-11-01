@@ -1,10 +1,15 @@
+import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
 
 class HomePageUserAvatar extends StatelessWidget {
-  const HomePageUserAvatar({super.key});
+  // When set, shows that family member's avatar instead of the placeholder
+  final String? uid;
+
+  const HomePageUserAvatar({super.key, this.uid});
 
   @override
   Widget build(BuildContext context) {
+    if (uid != null) return UserAvatar(uid: uid!, radius: 12);
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: Container(

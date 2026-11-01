@@ -1,3 +1,4 @@
+import 'package:remindmi/app/modules/avatar/avatar_editor_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -69,6 +70,18 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
+            SliverToBoxAdapter(
+              child: ManageCard(
+                icon: Icons.face,
+                title: 'My avatar',
+                onTap: () => Get.to(
+                  () => AvatarEditorView(
+                    uid: getStorage.read('id'),
+                    name: getStorage.read('fullName'),
+                  ),
+                ),
+              ),
+            ),
             SliverToBoxAdapter(
               child: ManageCard(
                 icon: Icons.article,
