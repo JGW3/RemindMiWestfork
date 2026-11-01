@@ -10,8 +10,7 @@
 const {onDocumentWritten} = require("firebase-functions/v2/firestore");
 const {logger} = require("firebase-functions");
 const {initializeApp} = require("firebase-admin/app");
-const {getFirestore, FieldValue} = require("firebase-admin/firestore");
-const {getMessaging} = require("firebase-admin/messaging");
+const {getFirestore} = require("firebase-admin/firestore");
 
 initializeApp();
 const db = getFirestore();
@@ -21,6 +20,10 @@ const {requireChildOf, ...children} = require("./children");
 Object.assign(exports, children);
 // One-time QR / code sign-in for children's phones
 Object.assign(exports, require("./signin"));
+// Server-sent due-time reminders for iPhones
+exports.sendDueReminders = require("./reminders").sendDueReminders;
+
+const {sendToUser} = require("./push");
 
 const statusByDep = (task) =>
   new Map((task?.dependent ?? []).map((d) => [d.dep, d]));
@@ -43,37 +46,6 @@ function taskData(action, taskId, task) {
     if (task.dueAt) data.dueAt = String(task.dueAt.toMillis());
   }
   return data;
-}
-
-async function sendToUser(uid, {notification, data}) {
-  const userRef = db.collection("users").doc(uid);
-  const user = await userRef.get();
-  const tokens = user.get("fcmTokens") ?? [];
-  if (tokens.length === 0) return;
-
-  const message = {tokens, data: data ?? {}};
-  if (notification) {
-    message.notification = notification;
-    message.android = {priority: "high"};
-  } else {
-    // Silent: wake the app in the background so it can update its reminder.
-    message.android = {priority: "high"};
-    message.apns = {
-      headers: {"apns-push-type": "background", "apns-priority": "5"},
-      payload: {aps: {"content-available": 1}},
-    };
-  }
-
-  const res = await getMessaging().sendEachForMulticast(message);
-  const dead = res.responses
-    .map((r, i) => (!r.success &&
-      ["messaging/registration-token-not-registered",
-        "messaging/invalid-registration-token"].includes(r.error?.code) ?
-      tokens[i] : null))
-    .filter(Boolean);
-  if (dead.length) {
-    await userRef.update({fcmTokens: FieldValue.arrayRemove(...dead)});
-  }
 }
 
 exports.onTaskWritten = onDocumentWritten("tasks/{taskId}", async (event) => {

@@ -169,8 +169,31 @@ class NotificationService {
   static Future<void> cancelAll() => _plugin.cancelAllPendingNotifications();
 
   // Makes the scheduled reminders exactly match the child's incomplete tasks.
+  static bool get _isIOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+
+  // On iPhones, the server sends reminders (functions/reminders.js) because
+  // iOS delays the silent pushes that would keep local ones up to date. Only
+  // rely on it while its heartbeat is recent; otherwise schedule locally.
+  static Future<bool> _serverSendsReminders() async {
+    if (!_isIOS) return false;
+    try {
+      if (await FirebaseMessaging.instance.getToken() == null) return false;
+      final meta = await FirebaseFirestore.instance.doc('meta/reminders').get();
+      final beat = (meta.data()?['heartbeat'] as Timestamp?)?.toDate();
+      return beat != null &&
+          DateTime.now().difference(beat) < const Duration(minutes: 10);
+    } catch (_) {
+      return false;
+    }
+  }
+
   static Future<void> syncReminders(List<Task> incompleteTasks) async {
     await init();
+    if (await _serverSendsReminders()) {
+      await cancelAll();
+      return;
+    }
     final wanted = {
       for (final task in incompleteTasks) ...[
         _idFor(task.id),
@@ -200,6 +223,7 @@ class NotificationService {
   static Future<void> handleTaskMessage(Map<String, dynamic> data) async {
     final taskId = data['taskId'];
     if (taskId is! String) return;
+    if (data['action'] == 'schedule' && await _serverSendsReminders()) return;
     if (data['action'] == 'cancel') {
       await cancelReminder(taskId);
       return;
@@ -257,9 +281,12 @@ class NotificationService {
     });
   }
 
+  // iOS tokens are also listed separately so the server reminder job only
+  // pushes to iPhones (Android schedules its own).
   static Future<void> _saveToken(String uid, String token) =>
       FirebaseFirestore.instance.collection('users').doc(uid).update({
         'fcmTokens': FieldValue.arrayUnion([token]),
+        if (_isIOS) 'iosTokens': FieldValue.arrayUnion([token]),
       });
 
   // Called before sign out so the next person to use this phone doesn't get
@@ -271,6 +298,7 @@ class NotificationService {
       if (uid != null && token != null) {
         await FirebaseFirestore.instance.collection('users').doc(uid).update({
           'fcmTokens': FieldValue.arrayRemove([token]),
+          'iosTokens': FieldValue.arrayRemove([token]),
         });
       }
       await FirebaseMessaging.instance.deleteToken();

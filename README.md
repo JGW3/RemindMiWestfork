@@ -47,6 +47,8 @@ Password resets, removal and account deletion run as Cloud Functions (`functions
 - **Task edited / completed / removed:** a silent push updates or cancels the reminder on the child's phone.
 - **Task done (parent):** a push notification when a child checks something off.
 
+On **iPhones**, reminders come from the server instead: a job (`functions/reminders.js`) runs every minute and pushes "Time to…" / "Coming up…" to iOS devices, because iOS delays the silent pushes that keep on-phone reminders up to date. iPhones only rely on it while its heartbeat (`meta/reminders`) is fresh; if the functions aren't deployed, they schedule reminders locally like Android.
+
 Local reminders work on their own. The pushes need the Cloud Function in `functions/` deployed (see step 4).
 
 ## Setup
@@ -141,6 +143,7 @@ users/{uid}
   role:    'parent' | 'dependent'
   parent:  parent uid ('' for parents)
   fcmTokens: [push token per signed-in device]
+  iosTokens: [the subset that are iPhones/iPads; server reminders go here]
   avatar:  { emoji, color, photo?: base64 JPEG }
 
 tasks/{taskId}
@@ -155,6 +158,11 @@ tasks/{taskId}
   priority:      1 = High, 2 = Medium, 3 = Low
   dependent:     [{ dep: uid, depName, status: bool }]
   dependentIds:  [uid]   // mirror of dependent[].dep, used for querying and rules
+```
+
+```
+signInCodes/{code}   server-only one-time sign-in codes { child, parent, expiresAt }
+meta/reminders       { lastRun, heartbeat } from the reminder job
 ```
 
 ## What was broken
@@ -173,7 +181,6 @@ tasks/{taskId}
 - Repeats are daily, weekdays or weekly only. There's no "every 2 days" or custom set of days yet.
 - Completion times in the history come from the child's phone clock.
 - The Overdue tag appears the next time the list redraws, not the exact moment the due time passes.
-- iOS treats silent pushes as low priority, so an edited due time may not reach an iPhone until the child opens the app.
 - Tested so far: `flutter analyze` and unit tests only. Not yet run on a real device.
 
 ## Tech stack
