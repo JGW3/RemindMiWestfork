@@ -1,80 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:remindmi/app/services/accessibility_service.dart';
 
-class AccessibilityView extends StatefulWidget {
+class AccessibilityView extends StatelessWidget {
   const AccessibilityView({super.key});
 
   @override
-  State<AccessibilityView> createState() => _AccessibilityViewState();
-}
-
-class _AccessibilityViewState extends State<AccessibilityView> {
-  bool val1 = false;
-  bool val2 = false;
-
-  onChangeFunctionBT(bool newValue1) {
-    setState(() {
-      val1 = newValue1;
-    });
-  }
-
-  onChangeFunctionTTS(bool newValue2) {
-    setState(() {
-      val2 = newValue2;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    Container(
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: new IconButton(
-        onPressed: () {
-          Get.back();
-        },
-        icon: Icon(Icons.arrow_back),
-      ),
-    );
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            accSwitch('Bold text', val1, onChangeFunctionBT),
-            accSwitch('Text-to-speech', val2, onChangeFunctionTTS),
-          ],
+    final settings = AccessibilityService.to;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        title: Text(
+          'Accessibility',
+          style: GoogleFonts.dmSans(fontWeight: FontWeight.w700),
         ),
       ),
-    );
-  }
-
-  Widget accSwitch(String text, bool val, Function onChangeMethod) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 22.0, left: 16.0, right: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
+      backgroundColor: Colors.white,
+      body: Obx(
+        () => ListView(
+          children: [
+            SwitchListTile(
+              title: Text('Bold text'),
+              value: settings.bold.value,
+              onChanged: settings.setBold,
             ),
-          ),
-          Spacer(),
-          CupertinoSwitch(
-            activeTrackColor: Colors.blue,
-            inactiveTrackColor: Colors.grey,
-            value: val,
-            onChanged: (newValue) {
-              onChangeMethod(newValue);
-            },
-          ),
-        ],
+            ListTile(
+              title: Text('Text size'),
+              subtitle: Slider(
+                value: settings.textScale.value,
+                min: 0.9,
+                max: 1.6,
+                divisions: 7,
+                label: '${(settings.textScale.value * 100).round()}%',
+                onChanged: settings.setTextScale,
+              ),
+            ),
+            SwitchListTile(
+              title: Text('Read aloud'),
+              subtitle: Text(
+                'Shows a speaker button on tasks that reads them out',
+              ),
+              value: settings.readAloud.value,
+              onChanged: settings.setReadAloud,
+            ),
+            if (settings.readAloud.value)
+              ListTile(
+                leading: Icon(Icons.volume_up),
+                title: Text('Try it'),
+                onTap: () => settings.speak(
+                  'Hi! This is how RemindMi reads your tasks out loud.',
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'These settings are saved on this phone.',
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

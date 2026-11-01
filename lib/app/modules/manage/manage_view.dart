@@ -96,23 +96,22 @@ class _ManageViewState extends State<ManageView> {
                 },
               ),
             ),
-            if (getStorage.read('role') == 'parent')
-              SliverToBoxAdapter(
-                child: ManageCard(
-                  icon: Icons.accessible,
-                  title: 'Accessibility',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AccessibilityView();
-                        },
-                      ),
-                    );
-                  },
-                ),
+            SliverToBoxAdapter(
+              child: ManageCard(
+                icon: Icons.accessible,
+                title: 'Accessibility',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AccessibilityView();
+                      },
+                    ),
+                  );
+                },
               ),
+            ),
             if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(

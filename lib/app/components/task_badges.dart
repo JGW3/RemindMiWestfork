@@ -137,3 +137,13 @@ class CompletionHistory extends StatelessWidget {
     );
   }
 }
+
+// What "Read aloud" says for a task.
+String spokenTask(Task row) {
+  final due = dueText(row, separator: ', ');
+  return [
+    row.name,
+    if (row.description.isNotEmpty) row.description,
+    due == 'Whenever needed' ? due : 'Due $due',
+  ].join('. ');
+}

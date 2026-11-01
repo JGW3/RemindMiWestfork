@@ -1,3 +1,4 @@
+import 'package:remindmi/app/services/accessibility_service.dart';
 import 'package:remindmi/app/components/task_badges.dart';
 import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class DependentTaskViewCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                ReadAloudButton(text: spokenTask(row)),
                 Expanded(
                   child: Container(
                     alignment: Alignment.topRight,

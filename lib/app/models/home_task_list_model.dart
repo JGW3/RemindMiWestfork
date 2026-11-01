@@ -121,8 +121,8 @@ class Completion {
   const Completion({required this.dep, required this.depName, this.at});
 
   static Completion fromMap(dynamic map) => Completion(
-        dep: map['dep'] ?? '',
-        depName: map['depName'] ?? '',
-        at: map['at'] is Timestamp ? (map['at'] as Timestamp).toDate() : null,
-      );
+    dep: map['dep'] ?? '',
+    depName: map['depName'] ?? '',
+    at: map['at'] is Timestamp ? (map['at'] as Timestamp).toDate() : null,
+  );
 }

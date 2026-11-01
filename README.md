@@ -17,7 +17,7 @@ A task shows as **Completed** for the parent once every assigned child has finis
 
 ### Repeating chores and taking turns
 
-- **Repeat:** every day, weekdays, every week, or *whenever it's needed* (no due time, for things like emptying the dishwasher).
+- **Repeat:** every day, every 2 days, weekdays, every week, or *whenever it's needed* (no due time, for things like emptying the dishwasher).
 - **Everyone vs. take turns:** a repeating task assigned to several kids either goes to all of them, or with **Take turns** to one at a time, in the order they were picked. When the kid whose turn it is checks it off, it passes to the next kid, who gets a "Your turn" push.
 - **Rollover:** when the last assigned kid checks off a scheduled repeat, it moves to the next date. Missed days are skipped, not stacked up.
 - **Who did it last:** cards show "Last done by Sam · 11/3 18:05", and the task details list the last 10 completions.
@@ -29,6 +29,12 @@ Example: litter box, *repeats every day*, *take turns*, Sam and Ali → each kid
 Everyone has an avatar: an emoji on a color, or a photo. You can change your own (tap it on the home screen, or *Manage → My avatar*). A parent can also change a child's from *Add Dependent → tap the child*. The child can change it right back. Neither side gets the final say.
 
 Photos are shrunk to 256px and stored in the user's Firestore profile, so Firebase Storage isn't needed.
+
+### Accessibility
+
+*Manage → Accessibility* (on every account, saved per phone):
+- **Bold text** and **text size** for the whole app.
+- **Read aloud**: adds a speaker button to tasks that reads them out with the phone's text-to-speech.
 
 ### Signing in a child's phone
 
@@ -151,7 +157,7 @@ tasks/{taskId}
   name, description, date, time
   dueAt:         Timestamp (exact due moment; date/time are display strings)
   remindBefore:  minutes before dueAt for an early reminder (0 = none)
-  repeat:        'none' | 'daily' | 'weekdays' | 'weekly' | 'asNeeded'
+  repeat:        'none' | 'daily' | 'everyOtherDay' | 'weekdays' | 'weekly' | 'asNeeded'
   rotation:      [uid] turn order for take-turns tasks ([] = everyone)
   lastCompletion: { dep, depName, at }   // the Cloud Function watches this
   history:       [{ dep, depName, at }]  // newest first, last 10
@@ -178,9 +184,8 @@ meta/reminders       { lastRun, heartbeat } from the reminder job
 
 ## Known gaps / next steps
 
-- Repeats are daily, weekdays or weekly only. There's no "every 2 days" or custom set of days yet.
+- No custom repeat days (e.g. "Mon/Wed/Fri") yet.
 - Completion times in the history come from the child's phone clock.
-- The Overdue tag appears the next time the list redraws, not the exact moment the due time passes.
 - Tested so far: `flutter analyze` and unit tests only. Not yet run on a real device.
 
 ## Tech stack
