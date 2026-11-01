@@ -1,14 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/routes/app_pages.dart';
+import 'package:remindmi/app/services/firestore_db.dart';
 
 class AddDependentController extends GetxController {
   final getStorge = GetStorage();
   var emailError = "".obs;
-  final _auth = FirebaseAuth.instance;
   var passwordVisibility = true.obs;
   var cPasswordVisibility = true.obs;
   var isLoading = false.obs;
@@ -70,12 +69,16 @@ class AddDependentController extends GetxController {
       if (fullName != '') {
         if (password == CPassword) {
           if (pass_valid.hasMatch(password)) {
-            await _auth
-                .createUserWithEmailAndPassword(
-                    email: email, password: password)
-                .then(
-                    (value) => {postDetailsToFirestore(fullName, email, role)})
-                .catchError((e) {
+            try {
+              await FireStoreDB()
+                  .createDependent(fullName, email.trim(), password);
+              isLoading.value = false;
+              showCustomSnackBarSuccess("Account created successfully",
+                  title: "success");
+              isSuccess.value = true;
+              Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
+              //after all process page is navigated to home of parent
+            } on FirebaseAuthException catch (e) {
               if (e.code == 'email-already-in-use') {
                 isLoading.value = false;
 
@@ -88,8 +91,10 @@ class AddDependentController extends GetxController {
                 isLoading.value = false;
                 showCustomSnackBar(e.code, title: "Error");
               }
-              return <dynamic>{};
-            });
+            } catch (e) {
+              isLoading.value = false;
+              showCustomSnackBar(e.toString(), title: "Error");
+            }
           } else {
             isLoading.value = false;
             showCustomSnackBar(
@@ -110,23 +115,5 @@ class AddDependentController extends GetxController {
       showCustomSnackBar("Please accept the terms and condition first! ",
           title: "Terms & Condition");
     }
-  }
-
-  postDetailsToFirestore(String fullName, String email, String role) async {
-    var user = _auth.currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    isLoading.value = false;
-    showCustomSnackBarSuccess("Account created successfully", title: "success");
-
-    ref.doc(user!.uid).set({
-      'parent': getStorge.read('id'),
-      'fullName': fullName,
-      'email': email,
-      'role': role
-    });
-
-    isSuccess.value = true;
-    Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
-    //after all process page is navigated to home of parent
   }
 }

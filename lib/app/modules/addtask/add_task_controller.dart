@@ -69,13 +69,15 @@ class AddTaskController extends GetxController {
                   }
                   CollectionReference ref =
                       FirebaseFirestore.instance.collection('tasks');
-                  ref.add({
+                  await ref.add({
                     'parent': getStorge.read('id'),
                     'parentName': getStorge.read('fullName'),
                     'name': taskName,
                     'description': taskDescription,
                     'date': selectedDate.text,
                     'dependent': selectedDependents,
+                    'dependentIds':
+                        FireStoreDB.dependentIdsOf(selectedDependents),
                     'time': selectedTime.text,
                     'priority': finalPriority
                   });

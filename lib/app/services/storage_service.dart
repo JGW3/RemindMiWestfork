@@ -3,11 +3,12 @@ import 'package:get_storage/get_storage.dart';
 class StorageService {
   static final GetStorage _storage = GetStorage();
   
-  // User data keys
-  static const String userIdKey = 'user_id';
-  static const String userEmailKey = 'user_email';
-  static const String userNameKey = 'user_name';
-  static const String userTypeKey = 'user_type';
+  // User data keys. These must match the keys the rest of the app reads
+  // directly via GetStorage().read('id' / 'fullName' / 'role').
+  static const String userIdKey = 'id';
+  static const String userEmailKey = 'email';
+  static const String userNameKey = 'fullName';
+  static const String userTypeKey = 'role';
   static const String isLoggedInKey = 'isLoggedIn';
   
   // Getters for common user data
