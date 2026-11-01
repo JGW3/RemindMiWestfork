@@ -1,4 +1,4 @@
-import 'package:remindmi/app/modules/avatar/avatar_editor_view.dart';
+import 'package:remindmi/app/components/child_options_sheet.dart';
 import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,11 +16,9 @@ class NoCheckboxChildList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => InkWell(
-        onTap: () => Get.to(
-          () => AvatarEditorView(
-            uid: child_list_controller.dependents[index].id,
-            name: child_list_controller.dependents[index].name,
-          ),
+        onTap: () => showChildOptions(
+          child_list_controller.dependents[index].id,
+          child_list_controller.dependents[index].name,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 0.0),

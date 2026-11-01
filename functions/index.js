@@ -16,6 +16,9 @@ const {getMessaging} = require("firebase-admin/messaging");
 initializeApp();
 const db = getFirestore();
 
+// Callables for managing children (password reset, removal, account deletion)
+Object.assign(exports, require("./children"));
+
 const statusByDep = (task) =>
   new Map((task?.dependent ?? []).map((d) => [d.dep, d]));
 

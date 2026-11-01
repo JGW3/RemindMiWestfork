@@ -53,6 +53,7 @@ dependencies:
   flutter_timezone: ^5.1.1
   firebase_messaging: ^16.7.1
   image_picker: ^1.2.4
+  cloud_functions: ^6.5.1
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:remindmi/app/models/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -134,8 +135,10 @@ class FireStoreDB {
                 : element,
           )
           .toList();
-      final mine = deps.firstWhere((element) => element['dep'] == uid,
-          orElse: () => null);
+      final mine = deps.firstWhere(
+        (element) => element['dep'] == uid,
+        orElse: () => null,
+      );
       final completion = {
         'dep': uid,
         'depName': mine?['depName'] ?? getStorge.read('fullName'),
@@ -145,9 +148,10 @@ class FireStoreDB {
       final update = <String, dynamic>{
         // The Cloud Function watches this to tell the parent who finished
         'lastCompletion': completion,
-        'history': [completion, ...List.from(data['history'] ?? const [])]
-            .take(10)
-            .toList(),
+        'history': [
+          completion,
+          ...List.from(data['history'] ?? const []),
+        ].take(10).toList(),
       };
 
       final repeat = data['repeat'] as String? ?? 'none';
@@ -155,8 +159,9 @@ class FireStoreDB {
           ? (data['dueAt'] as Timestamp).toDate()
           : parseDue('${data['date']}', '${data['time']}');
       DateTime? next;
-      final everyoneDone =
-          updated.every((element) => element['status'] == true);
+      final everyoneDone = updated.every(
+        (element) => element['status'] == true,
+      );
       if (isRepeating(repeat) && everyoneDone) {
         if (hasSchedule(repeat) && due != null) {
           next = nextOccurrence(due, repeat, DateTime.now());
@@ -168,20 +173,25 @@ class FireStoreDB {
           // Pass the task to whoever is next in line
           final at = rotation.indexOf(uid ?? '');
           final nextId = rotation[(at + 1) % rotation.length];
-          final nextUser =
-              await transaction.get(_firebaseFirestore.collection('users').doc(nextId));
+          final nextUser = await transaction.get(
+            _firebaseFirestore.collection('users').doc(nextId),
+          );
           updated = [
             {
               'dep': nextId,
               'depName': nextUser.data()?['fullName'] ?? '',
               'status': false,
-            }
+            },
           ];
           update['dependentIds'] = [nextId];
         } else {
           updated = updated
-              .map((element) =>
-                  {...Map<String, dynamic>.from(element), 'status': false})
+              .map(
+                (element) => {
+                  ...Map<String, dynamic>.from(element),
+                  'status': false,
+                },
+              )
               .toList();
         }
       }
@@ -218,6 +228,58 @@ class FireStoreDB {
     }
     if (changed > 0) await batch.commit();
   }
+
+  // Renames a family member everywhere their name is copied: their profile,
+  // and the parentName / depName fields on the parent's tasks.
+  Future<void> renameUser(String uid, String fullName) async {
+    final user = await _firebaseFirestore.collection('users').doc(uid).get();
+    final isParent = user.data()?['role'] == 'parent';
+    final tasks = isParent
+        ? await _firebaseFirestore
+              .collection('tasks')
+              .where('parent', isEqualTo: uid)
+              .get()
+        : await _firebaseFirestore
+              .collection('tasks')
+              .where('parent', isEqualTo: _uid)
+              .get();
+
+    final batch = _firebaseFirestore.batch();
+    batch.update(user.reference, {'fullName': fullName});
+    for (final doc in tasks.docs) {
+      if (isParent) {
+        batch.update(doc.reference, {'parentName': fullName});
+        continue;
+      }
+      final deps = List.from(doc.data()['dependent'] ?? const []);
+      if (!deps.any((d) => d['dep'] == uid)) continue;
+      batch.update(doc.reference, {
+        'dependent': [
+          for (final d in deps)
+            d['dep'] == uid
+                ? {...Map<String, dynamic>.from(d), 'depName': fullName}
+                : d,
+        ],
+      });
+    }
+    await batch.commit();
+    if (uid == _uid) getStorge.write('fullName', fullName);
+  }
+
+  // Server-side actions (functions/children.js); they need the Cloud
+  // Functions to be deployed.
+  Future<void> setChildPassword(String childUid, String password) =>
+      FirebaseFunctions.instance.httpsCallable('setChildPassword').call({
+        'childUid': childUid,
+        'password': password,
+      });
+
+  Future<void> deleteChild(String childUid) => FirebaseFunctions.instance
+      .httpsCallable('deleteChild')
+      .call({'childUid': childUid});
+
+  Future<void> deleteMyAccount() =>
+      FirebaseFunctions.instance.httpsCallable('deleteMyAccount').call();
 
   Future<void> setAvatar(String uid, Avatar avatar) => _firebaseFirestore
       .collection('users')
