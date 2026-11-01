@@ -30,6 +30,10 @@ Everyone has an avatar: an emoji on a color, or a photo. You can change your own
 
 Photos are shrunk to 256px and stored in the user's Firestore profile, so Firebase Storage isn't needed.
 
+### Signing in a child's phone
+
+Kids don't need to type a password. On the parent's phone: *Manage → Add Dependent → tap the child → Sign in a phone*, which shows a QR code and an 8-character code. On the child's phone: *Login → Sign in with a code*, then scan it or type it. Codes work once and expire after 10 minutes. The child stays signed in until someone taps Sign out.
+
 ### Managing children
 
 On *Add Dependent*, tap a child to change their avatar, rename them, set a new password, or remove them. Removing a child deletes their account and takes them off every task; a turn-taking task they were holding passes to the next child. *Settings → Edit Profile* renames you, and *Settings → Delete Profile* deletes your account (for a parent, the whole family).
@@ -84,12 +88,22 @@ firebase deploy --only firestore:rules
 
 ### 4. Deploy the push-notification function (optional)
 
-Cloud Functions require the Firebase **Blaze** (pay-as-you-go) plan. A family's usage stays well inside the free tier, but a billing account has to be attached. Skip this step and everything works except the pushes.
+Cloud Functions require the Firebase **Blaze** (pay-as-you-go) plan. A family's usage stays well inside the free tier, but a billing account has to be attached. Without them, tasks, reminders and avatars still work; you lose pushes, code sign-in, and resetting or removing children.
 
 ```bash
 cd functions && npm install && cd ..
 firebase deploy --only functions
 ```
+
+**Code sign-in** needs the functions to be allowed to mint sign-in tokens. Grant the default compute service account the *Service Account Token Creator* role once:
+
+```bash
+gcloud projects add-iam-policy-binding remindmi-dde76 \
+  --member=serviceAccount:260412068950-compute@developer.gserviceaccount.com \
+  --role=roles/iam.serviceAccountTokenCreator
+```
+
+(Or in the Google Cloud console: IAM → that service account → add the role.)
 
 **iOS push** additionally needs an APNs key uploaded under Firebase console → Project settings → Cloud Messaging, plus the *Push Notifications* capability enabled for the Runner target in Xcode. Background mode `remote-notification` is already in `Info.plist`.
 
