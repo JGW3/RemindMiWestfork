@@ -44,6 +44,12 @@ service cloud.firestore {
         (request.auth.uid == uid || resource.data.parent == request.auth.uid);
     }
 
+    // meta/reminders: { lastRun, heartbeat }, written by functions/reminders.js.
+    // iPhones read the heartbeat to know server reminders are running.
+    match /meta/reminders {
+      allow read: if signedIn();
+    }
+
     // tasks/{id}: { parent, parentName, name, description, date, time, dueAt, priority,
     //               remindBefore, repeat, rotation: [uid], history: [...], lastCompletion,
     //               dependent: [{dep, depName, status}], dependentIds: [uid] }
