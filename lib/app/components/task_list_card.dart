@@ -1,4 +1,4 @@
-import 'package:remindmi/app/components/overdue_badge.dart';
+import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/components/home_page_user_avatar.dart';
@@ -34,18 +34,21 @@ class TaskListCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Text(
-                        row.time + ' ' + row.date,
+                        dueText(row),
                         style: TextStyle(
                           color: prioritySubTitle(row.priority),
                           fontSize: 14,
                         ),
                       ),
                       OverdueBadge(row: row),
+                      RepeatBadge(row: row),
                     ],
                   ),
+                  LastDone(row: row),
                   SizedBox(height: 6),
                   Text(
                     row.name,
@@ -95,7 +98,11 @@ class TaskListCard extends StatelessWidget {
                     if (row.dependent == 1) ...[
                       Row(
                         children: [
-                          HomePageUserAvatar(),
+                          HomePageUserAvatar(
+                            uid: row.dependentList.isEmpty
+                                ? null
+                                : row.dependentList.first.dep,
+                          ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
                             child: Text(
@@ -119,7 +126,11 @@ class TaskListCard extends StatelessWidget {
                           Stack(
                             clipBehavior: Clip.none,
                             children: <Widget>[
-                              HomePageUserAvatar(),
+                              HomePageUserAvatar(
+                                uid: row.dependentList.isEmpty
+                                    ? null
+                                    : row.dependentList.first.dep,
+                              ),
                               new Positioned(
                                 left: 15.0,
                                 child: ClipRRect(

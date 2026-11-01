@@ -1,3 +1,5 @@
+import 'package:remindmi/app/components/task_badges.dart';
+import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,19 +93,7 @@ class TaskViewCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Color.fromARGB(255, 101, 152, 254),
-                            radius: 32,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 30,
-                              child: Image.asset(
-                                'assets/images/child.png',
-                                height: 57,
-                                width: 35,
-                              ),
-                            ),
-                          ),
+                          UserAvatar(uid: row.dependentList[index].dep),
                           SizedBox(width: 16),
                           Align(
                             child: Column(
@@ -168,19 +158,7 @@ class TaskViewCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Color.fromARGB(255, 101, 152, 254),
-                      radius: 32,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 30,
-                        child: Image.asset(
-                          'assets/images/child.png',
-                          height: 57,
-                          width: 35,
-                        ),
-                      ),
-                    ),
+                    UserAvatar(uid: row.parent),
                     SizedBox(width: 16),
                     Container(
                       child: Column(
@@ -262,7 +240,7 @@ class TaskViewCard extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
               alignment: Alignment.centerLeft,
               child: Text(
-                row.time + ',' + row.date,
+                dueText(row, separator: ', '),
                 style: GoogleFonts.dmSans(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w400,
@@ -270,6 +248,7 @@ class TaskViewCard extends StatelessWidget {
                 ),
               ),
             ),
+            CompletionHistory(row: row),
             if (from == 'home') ...[
               Container(
                 margin: EdgeInsets.fromLTRB(16, 47, 16, 43),

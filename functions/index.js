@@ -3,6 +3,8 @@
 //  - task edited (name/due changed)          -> silent message, child's phone reschedules
 //  - child completes / unassigned / deleted  -> silent message, child's phone cancels
 //  - child completes                         -> visible notification to the parent
+//  - repeating task rolls over                -> silent message, reminder moves to next date
+//  - turn-taking task handed to the next child -> "Your turn" notification
 // The app's side of this lives in lib/app/services/notification_service.dart.
 
 const {onDocumentWritten} = require("firebase-functions/v2/firestore");
@@ -87,10 +89,16 @@ exports.onTaskWritten = onDocumentWritten("tasks/{taskId}", async (event) => {
         sends.push(sendToUser(uid, {data: taskData("cancel", taskId)}));
       }
     } else if (!was) {
+      // A turn-taking task handed over on completion vs. a brand-new assignment
+      const handedOver = before && (after.rotation ?? []).includes(uid);
+      const due = after.date || after.time ?
+        `due ${after.time}, ${after.date}` : "whenever it's needed";
       sends.push(sendToUser(uid, {
         notification: {
-          title: `New task from ${after.parentName ?? "your parent"}`,
-          body: `${after.name} · due ${after.time}, ${after.date}`,
+          title: handedOver ?
+            `Your turn: ${after.name}` :
+            `New task from ${after.parentName ?? "your parent"}`,
+          body: handedOver ? `Your turn is up · ${due}` : `${after.name} · ${due}`,
         },
         data: taskData("schedule", taskId, after),
       }));
@@ -98,14 +106,19 @@ exports.onTaskWritten = onDocumentWritten("tasks/{taskId}", async (event) => {
       sends.push(sendToUser(uid, {data: taskData("schedule", taskId, after)}));
     }
 
-    if (pendingBefore && now?.status === true && after?.parent) {
-      sends.push(sendToUser(after.parent, {
-        notification: {
-          title: `${now.depName ?? "Your child"} finished a task`,
-          body: after.name,
-        },
-      }));
-    }
+  }
+
+  // The app stamps lastCompletion on every check-off. Watching it (instead of
+  // status flips) also catches repeating tasks, which reset to not-done.
+  const doneAt = (task) => task?.lastCompletion?.at?.toMillis?.();
+  if (after?.parent && doneAt(after) && doneAt(after) !== doneAt(before)) {
+    const rolled = after.date !== before?.date;
+    sends.push(sendToUser(after.parent, {
+      notification: {
+        title: `${after.lastCompletion.depName ?? "Your child"} finished a task`,
+        body: rolled ? `${after.name} · next: ${after.date}` : after.name,
+      },
+    }));
   }
 
   const results = await Promise.allSettled(sends);

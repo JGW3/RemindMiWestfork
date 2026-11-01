@@ -2,22 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
 
 Task task(DateTime? dueAt, Map<String, bool> statuses) => Task(
-      id: 't',
-      name: 'Dishes',
-      description: '',
-      date: '',
-      time: '',
-      dependent: statuses.length,
-      priority: 1,
-      parent: 'mom',
-      parentName: 'Mom',
-      depenListString: const [],
-      dependentList: [
-        for (final e in statuses.entries)
-          DependentList(dep: e.key, depName: e.key, status: e.value)
-      ],
-      dueAt: dueAt,
-    );
+  id: 't',
+  name: 'Dishes',
+  description: '',
+  date: '',
+  time: '',
+  dependent: statuses.length,
+  priority: 1,
+  parent: 'mom',
+  parentName: 'Mom',
+  depenListString: const [],
+  dependentList: [
+    for (final e in statuses.entries)
+      DependentList(dep: e.key, depName: e.key, status: e.value),
+  ],
+  dueAt: dueAt,
+);
 
 void main() {
   final past = DateTime.now().subtract(const Duration(hours: 1));

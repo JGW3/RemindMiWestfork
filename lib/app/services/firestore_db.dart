@@ -1,8 +1,10 @@
+import 'package:remindmi/app/models/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/due_date.dart';
+import 'package:remindmi/app/helper/task_options.dart';
 import 'package:remindmi/app/models/add_task_dependent_list_model.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
 
@@ -113,22 +115,80 @@ class FireStoreDB {
     );
   }
 
-  Future<void> completeTask(String taskId) async {
-    // Marks the current dependent's entry as done. Runs in a transaction so two
-    // children finishing the same task at once don't overwrite each other.
+  // Marks the current dependent's entry as done. Runs in a transaction so two
+  // children finishing the same task at once don't overwrite each other.
+  // For a repeating task, the last child to finish rolls it over: scheduled
+  // repeats move to their next date (returned), and turn-taking tasks pass to
+  // the next child in the rotation; otherwise everyone resets to not done.
+  Future<DateTime?> completeTask(String taskId) async {
     final ref = _firebaseFirestore.collection('tasks').doc(taskId);
     final uid = _uid;
-    await _firebaseFirestore.runTransaction((transaction) async {
+    return _firebaseFirestore.runTransaction((transaction) async {
       final snap = await transaction.get(ref);
-      final List deps = List.from(snap.get('dependent'));
-      final updated = deps
+      final data = snap.data()!;
+      final List deps = List.from(data['dependent']);
+      var updated = deps
           .map(
             (element) => element['dep'] == uid
                 ? {...Map<String, dynamic>.from(element), 'status': true}
                 : element,
           )
           .toList();
-      transaction.update(ref, {'dependent': updated});
+      final mine = deps.firstWhere((element) => element['dep'] == uid,
+          orElse: () => null);
+      final completion = {
+        'dep': uid,
+        'depName': mine?['depName'] ?? getStorge.read('fullName'),
+        // serverTimestamp isn't allowed inside arrays, so use the phone's clock
+        'at': Timestamp.now(),
+      };
+      final update = <String, dynamic>{
+        // The Cloud Function watches this to tell the parent who finished
+        'lastCompletion': completion,
+        'history': [completion, ...List.from(data['history'] ?? const [])]
+            .take(10)
+            .toList(),
+      };
+
+      final repeat = data['repeat'] as String? ?? 'none';
+      final due = data['dueAt'] is Timestamp
+          ? (data['dueAt'] as Timestamp).toDate()
+          : parseDue('${data['date']}', '${data['time']}');
+      DateTime? next;
+      final everyoneDone =
+          updated.every((element) => element['status'] == true);
+      if (isRepeating(repeat) && everyoneDone) {
+        if (hasSchedule(repeat) && due != null) {
+          next = nextOccurrence(due, repeat, DateTime.now());
+          update['dueAt'] = Timestamp.fromDate(next);
+          update['date'] = formatTaskDate(next);
+        }
+        final rotation = List<String>.from(data['rotation'] ?? const []);
+        if (rotation.length > 1) {
+          // Pass the task to whoever is next in line
+          final at = rotation.indexOf(uid ?? '');
+          final nextId = rotation[(at + 1) % rotation.length];
+          final nextUser =
+              await transaction.get(_firebaseFirestore.collection('users').doc(nextId));
+          updated = [
+            {
+              'dep': nextId,
+              'depName': nextUser.data()?['fullName'] ?? '',
+              'status': false,
+            }
+          ];
+          update['dependentIds'] = [nextId];
+        } else {
+          updated = updated
+              .map((element) =>
+                  {...Map<String, dynamic>.from(element), 'status': false})
+              .toList();
+        }
+      }
+
+      update['dependent'] = updated;
+      transaction.update(ref, update);
+      return next;
     });
   }
 
@@ -158,6 +218,11 @@ class FireStoreDB {
     }
     if (changed > 0) await batch.commit();
   }
+
+  Future<void> setAvatar(String uid, Avatar avatar) => _firebaseFirestore
+      .collection('users')
+      .doc(uid)
+      .update({'avatar': avatar.toMap()});
 
   static List<String> dependentIdsOf(List selectedDependents) =>
       selectedDependents.map((element) => element['dep'] as String).toList();

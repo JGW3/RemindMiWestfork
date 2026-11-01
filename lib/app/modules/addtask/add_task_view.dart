@@ -1,4 +1,5 @@
-import 'package:remindmi/app/components/remind_before_dropdown.dart';
+import 'package:remindmi/app/components/option_dropdown.dart';
+import 'package:remindmi/app/helper/task_options.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -227,7 +228,26 @@ class _AddTaskViewState extends State<AddTaskView> {
               ],
             ),
             SizedBox(height: 25),
-            RemindBeforeDropdown(value: addTaskController.remindBefore),
+            OptionDropdown(
+              value: addTaskController.remindBefore,
+              options: remindBeforeOptions,
+            ),
+            SizedBox(height: 16),
+            OptionDropdown(
+              value: addTaskController.repeat,
+              options: repeatOptions,
+            ),
+            Obx(
+              () => addTaskController.repeat.value == 'none'
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: OptionDropdown(
+                        value: addTaskController.takeTurns,
+                        options: takeTurnsOptions,
+                      ),
+                    ),
+            ),
             SizedBox(height: 25),
             Container(
               alignment: Alignment.centerLeft,

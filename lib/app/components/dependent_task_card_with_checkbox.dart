@@ -1,7 +1,8 @@
-import 'package:remindmi/app/components/overdue_badge.dart';
+import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
+import 'package:remindmi/app/helper/task_options.dart';
 import 'package:remindmi/app/services/firestore_db.dart';
 import 'package:remindmi/constants/images.dart';
 import 'package:remindmi/constants/priorityColor.dart';
@@ -34,10 +35,12 @@ class _DependentTaskCardWithCheckboxState
     });
 
     try {
-      await FireStoreDB().completeTask(widget.row.id);
+      final next = await FireStoreDB().completeTask(widget.row.id);
 
       showCustomSnackBarSuccess(
-        "Task completed successfully!",
+        next == null
+            ? "Task completed successfully!"
+            : "Done! Next one: ${formatTaskDate(next)} at ${widget.row.time}",
         title: "Great job!",
       );
     } catch (e) {
@@ -103,18 +106,21 @@ class _DependentTaskCardWithCheckboxState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Text(
-                        widget.row.time + ' ' + widget.row.date,
+                        dueText(widget.row),
                         style: TextStyle(
                           color: prioritySubTitle(widget.row.priority),
                           fontSize: 14,
                         ),
                       ),
                       OverdueBadge(row: widget.row),
+                      RepeatBadge(row: widget.row),
                     ],
                   ),
+                  LastDone(row: widget.row),
                   SizedBox(height: 6),
                   Text(
                     widget.row.name,

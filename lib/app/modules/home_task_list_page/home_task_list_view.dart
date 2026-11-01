@@ -1,3 +1,5 @@
+import 'package:remindmi/app/modules/avatar/avatar_editor_view.dart';
+import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -54,10 +56,18 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                           color: Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
-                      Image.asset(
-                        'assets/images/emoji.png',
-                        height: 35,
-                        width: 35,
+                      Spacer(),
+                      InkWell(
+                        onTap: () => Get.to(
+                          () => AvatarEditorView(
+                            uid: getStorge.read('id'),
+                            name: getStorge.read('fullName'),
+                          ),
+                        ),
+                        child: UserAvatar(
+                          uid: getStorge.read('id'),
+                          radius: 24,
+                        ),
                       ),
                     ],
                   ),

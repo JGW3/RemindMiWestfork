@@ -3,10 +3,23 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
 
-    // users/{uid}: { fullName, email, role: 'parent'|'dependent', parent: <parent uid or ''> }
+    // The family "root" is the parent account: a parent's own uid, or a
+    // child's `parent` field.
+    function myProfile() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function myRoot() {
+      return myProfile().role == 'parent' ? request.auth.uid : myProfile().parent;
+    }
+
+    // users/{uid}: { fullName, email, role: 'parent'|'dependent', parent: <parent uid or ''>,
+    //                avatar?: { emoji, color, photo? }, fcmTokens?: [token] }
     match /users/{uid} {
-      allow read: if signedIn() &&
-        (request.auth.uid == uid || resource.data.parent == request.auth.uid);
+      // Everyone in a family can see each other's profile (names, avatars)
+      allow read: if signedIn() && (
+        request.auth.uid == uid ||
+        resource.data.parent == request.auth.uid ||
+        uid == myRoot() ||
+        resource.data.parent == myRoot()
+      );
 
       // A parent signs themselves up, or a parent creates a dependent profile.
       allow create: if signedIn() && (
@@ -17,29 +30,43 @@ service cloud.firestore {
           request.resource.data.parent == request.auth.uid)
       );
 
-      allow update: if signedIn() && request.auth.uid == uid &&
-        request.resource.data.role == resource.data.role &&
-        request.resource.data.parent == resource.data.parent;
+      // Anyone can edit their own profile (but not their role or family).
+      // A parent can also change a child's avatar. The child can change it
+      // right back; nobody gets the last word.
+      allow update: if signedIn() && (
+        (request.auth.uid == uid &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.parent == resource.data.parent) ||
+        (resource.data.parent == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['avatar']))
+      );
       allow delete: if signedIn() &&
         (request.auth.uid == uid || resource.data.parent == request.auth.uid);
     }
 
-    // tasks/{id}: { parent, parentName, name, description, date, time, priority,
+    // tasks/{id}: { parent, parentName, name, description, date, time, dueAt, priority,
+    //               remindBefore, repeat, rotation: [uid], history: [...], lastCompletion,
     //               dependent: [{dep, depName, status}], dependentIds: [uid] }
     match /tasks/{taskId} {
       function isOwner() { return resource.data.parent == request.auth.uid; }
       function isAssignee() { return request.auth.uid in resource.data.dependentIds; }
+      function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+      function repeats() { return resource.data.get('repeat', 'none') != 'none'; }
 
       allow read: if signedIn() && (isOwner() || isAssignee());
       allow create: if signedIn() && request.resource.data.parent == request.auth.uid;
       allow delete: if signedIn() && isOwner();
 
-      // Parents can edit anything (but not give the task away); children can only
-      // touch the completion list.
+      // Parents can edit anything (but not give the task away). Children can
+      // check tasks off; on a repeating task that also rolls the due date
+      // forward and, for turn-taking tasks, hands it to someone in the rotation.
       allow update: if signedIn() && (
         (isOwner() && request.resource.data.parent == request.auth.uid) ||
-        (isAssignee() &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['dependent']))
+        (isAssignee() && changed().hasOnly(['dependent', 'lastCompletion', 'history'])) ||
+        (isAssignee() && repeats() &&
+          changed().hasOnly(['dependent', 'lastCompletion', 'history', 'dueAt', 'date', 'dependentIds']) &&
+          request.resource.data.dependentIds.hasOnly(
+            resource.data.get('rotation', []).concat(resource.data.dependentIds)))
       );
     }
   }
