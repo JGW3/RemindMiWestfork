@@ -141,6 +141,19 @@ On Android 12+, the app asks for the "Alarms & reminders" permission so reminder
 4. On another device or emulator, log in as the child. The task appears under Incomplete; check it off.
 5. Back on the parent device it moves to Completed, live.
 
+## Go-live checklist
+
+1. In the [Firebase console](https://console.firebase.google.com/project/remindmi-dde76): turn on **Authentication → Email/Password** and create the **Firestore** database if you haven't. For functions, upgrade to **Blaze**.
+2. `firebase login`, then from the repo root:
+   ```bash
+   cd functions && npm install && cd ..
+   firebase deploy --only firestore:rules,functions
+   ```
+   (`.firebaserc` already points at `remindmi-dde76`. Accept enabling Cloud Scheduler / Cloud Functions APIs if asked.)
+3. Grant the token-creator role (see *Code sign-in* above) so QR sign-in works.
+4. Android: `flutter build apk --release`, then install `build/app/outputs/flutter-apk/app-release.apk` on each phone (allow installs from unknown sources). It's signed with the debug key, which is fine for family sideloading but not for the Play Store.
+5. iPhone: needs a Mac, `flutterfire configure` (adds `GoogleService-Info.plist`), an APNs key in Firebase, and the Push Notifications capability in Xcode.
+
 ## Data model (Firestore)
 
 ```
