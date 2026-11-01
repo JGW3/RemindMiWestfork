@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+
+    // users/{uid}: { fullName, email, role: 'parent'|'dependent', parent: <parent uid or ''> }
+    match /users/{uid} {
+      allow read: if signedIn() &&
+        (request.auth.uid == uid || resource.data.parent == request.auth.uid);
+
+      // A parent signs themselves up, or a parent creates a dependent profile.
+      allow create: if signedIn() && (
+        (request.auth.uid == uid &&
+          request.resource.data.role == 'parent' &&
+          request.resource.data.parent == '') ||
+        (request.resource.data.role == 'dependent' &&
+          request.resource.data.parent == request.auth.uid)
+      );
+
+      allow update: if signedIn() && request.auth.uid == uid &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.parent == resource.data.parent;
+      allow delete: if signedIn() &&
+        (request.auth.uid == uid || resource.data.parent == request.auth.uid);
+    }
+
+    // tasks/{id}: { parent, parentName, name, description, date, time, priority,
+    //               dependent: [{dep, depName, status}], dependentIds: [uid] }
+    match /tasks/{taskId} {
+      function isOwner() { return resource.data.parent == request.auth.uid; }
+      function isAssignee() { return request.auth.uid in resource.data.dependentIds; }
+
+      allow read: if signedIn() && (isOwner() || isAssignee());
+      allow create: if signedIn() && request.resource.data.parent == request.auth.uid;
+      allow delete: if signedIn() && isOwner();
+
+      // Parents can edit anything (but not give the task away); children can only
+      // touch the completion list.
+      allow update: if signedIn() && (
+        (isOwner() && request.resource.data.parent == request.auth.uid) ||
+        (isAssignee() &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['dependent']))
+      );
+    }
+  }
+}

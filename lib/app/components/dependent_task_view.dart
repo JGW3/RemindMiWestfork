@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
+import 'package:remindmi/app/services/firestore_db.dart';
 
 class DependentTaskViewCard extends StatelessWidget {
   final int indexNo;
@@ -183,44 +183,10 @@ class DependentTaskViewCard extends StatelessWidget {
                     elevation: 0.0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14.0)),
-                    onPressed: () {
+                    onPressed: () async {
                       try {
-                        row.dependentList
-                            .firstWhere((element) =>
-                                element.dep == getStorge.read('id'))
-                            .depName;
-                        var name = row.name;
-                        var description = row.description;
-                        var parent = row.parent;
-                        var parentName = row.parentName;
-                        var priority = row.priority;
-                        var date = row.date;
-                        var time = row.time;
-                        var dependentList = row.depenListString;
-
-                        print(dependentList);
-                        dependentList.removeWhere((element) =>
-                            element['dep'] == getStorge.read('id'));
-                        dependentList.add({
-                          'dep': getStorge.read('id'),
-                          'depName': getStorge.read('fullName'),
-                          'status': true
-                        });
-                        print(dependentList);
-
-                        var ref = FirebaseFirestore.instance
-                            .collection('tasks')
-                            .doc(row.id);
-                        ref.set({
-                          'parent': parent,
-                          'parentName': parentName,
-                          'name': name,
-                          'description': description,
-                          'date': date,
-                          'dependent': dependentList,
-                          'time': time,
-                          'priority': priority
-                        });
+                        await FireStoreDB().completeTask(row.id);
+                        if (!context.mounted) return;
 
                         showDialog(
                           context: context,

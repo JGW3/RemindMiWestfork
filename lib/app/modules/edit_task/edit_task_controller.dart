@@ -81,13 +81,15 @@ class EditTaskController extends GetxController {
                   final ref = FirebaseFirestore.instance
                       .collection('tasks')
                       .doc(row.id);
-                  ref.set({
+                  await ref.set({
                     'parent': getStorge.read('id'),
                     'parentName': getStorge.read('fullName'),
                     'name': taskName,
                     'description': taskDescription,
                     'date': selectedDate.text,
                     'dependent': selectedDependents,
+                    'dependentIds':
+                        FireStoreDB.dependentIdsOf(selectedDependents),
                     'time': selectedTime.text,
                     'priority': finalPriority
                   });

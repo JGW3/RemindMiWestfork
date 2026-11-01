@@ -116,7 +116,7 @@ class SignupController extends GetxController {
     isLoading.value = false;
     showCustomSnackBarSuccess("Account created successfully", title: "success");
 
-    ref.doc(user!.uid).set(
+    await ref.doc(user!.uid).set(
         {'parent': '', 'fullName': fullName, 'email': email, 'role': role});
 
     isSuccess.value = true;

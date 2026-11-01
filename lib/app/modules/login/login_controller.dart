@@ -6,7 +6,6 @@ import 'package:remindmi/app/routes/app_pages.dart';
 import 'package:remindmi/app/services/storage_service.dart';
 
 class LoginController extends GetxController {
-
   var emailError = "".obs;
   var passwordError = "".obs;
   var extraError = "".obs;
@@ -20,7 +19,6 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
   }
-
 
   void togglePasswordVisibility() {
     passwordVisible.value = !passwordVisible.value;
@@ -39,8 +37,8 @@ class LoginController extends GetxController {
   login(String email, String password) {
     // here data from  view is passed into this function and this function further passes those arguments to
     // another function for further authentication process
-    loginUsingEmailPassword(email, password);
     isLoading.value = true;
+    loginUsingEmailPassword(email.trim(), password);
   }
 
   Future<User?> loginUsingEmailPassword(
@@ -48,19 +46,22 @@ class LoginController extends GetxController {
     String password,
   ) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    print(auth);
     try {
       // Core authentication process is done here
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email,
           password: password.trim().replaceAll(RegExp(r' \s+'), ' '));
-      isLoading.value = false;
-      route(); // Route is called here . in route the page is directed to bottom navigation home aka home page ...
+      await route(); // Route is called here . in route the page is directed to bottom navigation home aka home page ...
       //and data of user is saved in get storage
-      showCustomSnackBarSuccess("login successfull", title: "success");
+      isLoading.value = false;
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
+      if (e.code == "invalid-credential") {
+        // Newer Firebase projects report bad email/password with this single code
+        isExtraError.value = true;
+        showCustomSnackBar("Wrong email or password", title: "Error");
+        extraError.value = 'Wrong email or password';
+      } else if (e.code == "user-not-found") {
         emailError.value = "User not found !";
         showCustomSnackBar("User not found", title: "Email");
         isEmailError.value = true;
@@ -82,27 +83,31 @@ class LoginController extends GetxController {
         extraError.value = e.code;
       }
       isLoading.value = false;
+    } catch (e) {
+      showCustomSnackBar(e.toString(), title: "Error");
+      isLoading.value = false;
     }
     return null;
   }
 
-  void route() {
+  Future<void> route() async {
     User? user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
+    final documentSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        StorageService.setUserId(user.uid);
-        StorageService.setUserName(documentSnapshot.get('fullName'));
-        StorageService.setUserEmail(user.email);
-        StorageService.setUserType(documentSnapshot.get('role'));
-        StorageService.setLoggedIn(true);
-        Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
-      } else {
-        print('Something went wrong');
-      }
-    });
+        .get();
+    if (documentSnapshot.exists) {
+      StorageService.setUserId(user.uid);
+      StorageService.setUserName(documentSnapshot.get('fullName'));
+      StorageService.setUserEmail(user.email);
+      StorageService.setUserType(documentSnapshot.get('role'));
+      StorageService.setLoggedIn(true);
+      showCustomSnackBarSuccess("login successfull", title: "success");
+      Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
+    } else {
+      // Auth account exists but no profile doc (e.g. signup was interrupted)
+      await FirebaseAuth.instance.signOut();
+      showCustomSnackBar("No profile found for this account", title: "Error");
+    }
   }
 }

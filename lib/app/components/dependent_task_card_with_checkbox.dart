@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
+import 'package:remindmi/app/services/firestore_db.dart';
 import 'package:remindmi/constants/images.dart';
 import 'package:remindmi/constants/priorityColor.dart';
 
@@ -31,36 +31,17 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
     });
 
     try {
-      var dependentList = widget.row.depenListString;
-      
-      // Update the status for current user
-      dependentList.removeWhere((element) => element['dep'] == widget.getStorge.read('id'));
-      dependentList.add({
-        'dep': widget.getStorge.read('id'),
-        'depName': widget.getStorge.read('fullName'),
-        'status': true
-      });
-
-      // Update the task in Firestore
-      var ref = FirebaseFirestore.instance.collection('tasks').doc(widget.row.id);
-      await ref.set({
-        'parent': widget.row.parent,
-        'parentName': widget.row.parentName,
-        'name': widget.row.name,
-        'description': widget.row.description,
-        'date': widget.row.date,
-        'dependent': dependentList,
-        'time': widget.row.time,
-        'priority': widget.row.priority
-      });
+      await FireStoreDB().completeTask(widget.row.id);
 
       showCustomSnackBarSuccess("Task completed successfully!", title: "Great job!");
     } catch (e) {
       showCustomSnackBar('Error completing task: ${e.toString()}', title: "Error");
     } finally {
-      setState(() {
-        isCompleting = false;
-      });
+      if (mounted) {
+        setState(() {
+          isCompleting = false;
+        });
+      }
     }
   }
 

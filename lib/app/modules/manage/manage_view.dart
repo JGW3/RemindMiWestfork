@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -176,7 +177,8 @@ class _ManageViewState extends State<ManageView> {
                 child: ManageCard(
                   icon: Icons.logout_sharp,
                   title: 'Sign out',
-                  onTap: () {
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
                     getStorage.erase();
                     Get.deleteAll();
                     Get.offAllNamed(Routes.LANDINGPAGE);

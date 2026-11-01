@@ -315,9 +315,9 @@ class TaskViewCard extends StatelessWidget {
                         elevation: 0.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0)),
-                        onPressed: () {
+                        onPressed: () async {
                           try {
-                            FirebaseFirestore.instance
+                            await FirebaseFirestore.instance
                                 .collection('tasks')
                                 .doc(row.id)
                                 .delete();
