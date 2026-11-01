@@ -1,4 +1,5 @@
 import 'package:remindmi/app/components/task_badges.dart';
+import 'package:remindmi/app/components/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -74,19 +75,7 @@ class DependentTaskViewCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 101, 152, 254),
-                    radius: 32,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 30,
-                      child: Image.asset(
-                        'assets/images/child.png',
-                        height: 57,
-                        width: 35,
-                      ),
-                    ),
-                  ),
+                  UserAvatar(uid: row.parent),
                   SizedBox(width: 16),
                   Container(
                     child: Column(

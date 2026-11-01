@@ -11,10 +11,9 @@ service cloud.firestore {
     }
 
     // users/{uid}: { fullName, email, role: 'parent'|'dependent', parent: <parent uid or ''>,
-    //                fcmTokens?: [token] }
+    //                avatar?: { emoji, color, photo? }, fcmTokens?: [token] }
     match /users/{uid} {
-      // Everyone in a family can see each other's profile (a child passing a
-      // turn-taking task on reads the next sibling's name)
+      // Everyone in a family can see each other's profile (names, avatars)
       allow read: if signedIn() && (
         request.auth.uid == uid ||
         resource.data.parent == request.auth.uid ||
@@ -31,9 +30,16 @@ service cloud.firestore {
           request.resource.data.parent == request.auth.uid)
       );
 
-      allow update: if signedIn() && request.auth.uid == uid &&
-        request.resource.data.role == resource.data.role &&
-        request.resource.data.parent == resource.data.parent;
+      // Anyone can edit their own profile (but not their role or family).
+      // A parent can also change a child's avatar. The child can change it
+      // right back; nobody gets the last word.
+      allow update: if signedIn() && (
+        (request.auth.uid == uid &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.parent == resource.data.parent) ||
+        (resource.data.parent == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['avatar']))
+      );
       allow delete: if signedIn() &&
         (request.auth.uid == uid || resource.data.parent == request.auth.uid);
     }

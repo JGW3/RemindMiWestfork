@@ -24,6 +24,12 @@ A task shows as **Completed** for the parent once every assigned child has finis
 
 Example: litter box, *repeats every day*, *take turns*, Sam and Ali → each kid gets it every other day.
 
+### Avatars
+
+Everyone has an avatar: an emoji on a color, or a photo. You can change your own (tap it on the home screen, or *Manage → My avatar*). A parent can also change a child's from *Add Dependent → tap the child*. The child can change it right back. Neither side gets the final say.
+
+Photos are shrunk to 256px and stored in the user's Firestore profile, so Firebase Storage isn't needed.
+
 ### Reminders and notifications
 
 - **Due-time reminder (child's phone):** each incomplete task gets a local notification at its due time, plus an optional early one (5, 15, 30 or 60 minutes before, picked per task). These work offline and survive reboots, and they stay in step with the task list whenever the app is open.
@@ -106,6 +112,7 @@ users/{uid}
   role:    'parent' | 'dependent'
   parent:  parent uid ('' for parents)
   fcmTokens: [push token per signed-in device]
+  avatar:  { emoji, color, photo?: base64 JPEG }
 
 tasks/{taskId}
   parent, parentName

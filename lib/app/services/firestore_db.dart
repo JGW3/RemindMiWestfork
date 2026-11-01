@@ -1,3 +1,4 @@
+import 'package:remindmi/app/models/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -217,6 +218,11 @@ class FireStoreDB {
     }
     if (changed > 0) await batch.commit();
   }
+
+  Future<void> setAvatar(String uid, Avatar avatar) => _firebaseFirestore
+      .collection('users')
+      .doc(uid)
+      .update({'avatar': avatar.toMap()});
 
   static List<String> dependentIdsOf(List selectedDependents) =>
       selectedDependents.map((element) => element['dep'] as String).toList();
