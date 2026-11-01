@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/overdue_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
@@ -96,13 +97,16 @@ class _DependentTaskCardWithCheckboxState extends State<DependentTaskCardWithChe
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.row.time + ' ' + widget.row.date,
-                    style: TextStyle(
-                      color: prioritySubTitle(widget.row.priority),
-                      fontSize: 14,
+                  Row(children: [
+                    Text(
+                      widget.row.time + ' ' + widget.row.date,
+                      style: TextStyle(
+                        color: prioritySubTitle(widget.row.priority),
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
+                    OverdueBadge(row: widget.row),
+                  ]),
                   SizedBox(height: 6),
                   Text(
                     widget.row.name,

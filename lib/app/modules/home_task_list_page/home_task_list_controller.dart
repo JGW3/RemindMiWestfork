@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:remindmi/app/models/home_task_list_model.dart';
 import 'package:remindmi/app/services/firestore_db.dart';
@@ -20,6 +21,8 @@ class HomeTaskListController extends GetxController {
     switch (taskStatus) {
       case ParentTaskStatus.incomplete:
         tasks.bindStream(FireStoreDB().parentGetInCompleteTasks());
+        FireStoreDB().backfillParentTasks().catchError(
+            (e) => debugPrint('Task backfill failed: $e'));
         break;
       case ParentTaskStatus.complete:
         tasks.bindStream(FireStoreDB().parentGetCompleteTasks());

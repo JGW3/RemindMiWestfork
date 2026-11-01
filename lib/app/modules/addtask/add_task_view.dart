@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/remind_before_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -257,6 +258,10 @@ class _AddTaskViewState extends State<AddTaskView> {
               ),
             ],
           ),
+          SizedBox(
+            height: 25,
+          ),
+          RemindBeforeDropdown(value: addTaskController.remindBefore),
           SizedBox(
             height: 25,
           ),

@@ -13,11 +13,11 @@ This fork started from a Software Engineering group project ([dderheim00/RemindM
 | Completion | Sees each child's status per task | Taps the checkbox, or opens the task and hits **Completed** |
 | Home tabs | Incomplete / Completed | Incomplete / Completed |
 
-A task shows as **Completed** for the parent once every assigned child has finished it.
+A task shows as **Completed** for the parent once every assigned child has finished it. Lists are sorted by due time (then priority), and unfinished tasks past their due time get a red **Overdue** tag.
 
 ### Reminders and notifications
 
-- **Due-time reminder (child's phone):** each incomplete task gets a local notification at its due time. These work offline and survive reboots, and they stay in step with the task list whenever the app is open.
+- **Due-time reminder (child's phone):** each incomplete task gets a local notification at its due time, plus an optional early one (5, 15, 30 or 60 minutes before, picked per task). These work offline and survive reboots, and they stay in step with the task list whenever the app is open.
 - **New task (child):** a push notification arrives as soon as a parent assigns a task, and the reminder is scheduled even if the app is closed.
 - **Task edited / completed / removed:** a silent push updates or cancels the reminder on the child's phone.
 - **Task done (parent):** a push notification when a child checks something off.
@@ -102,6 +102,7 @@ tasks/{taskId}
   parent, parentName
   name, description, date, time
   dueAt:         Timestamp (exact due moment; date/time are display strings)
+  remindBefore:  minutes before dueAt for an early reminder (0 = none)
   priority:      1 = High, 2 = Medium, 3 = Low
   dependent:     [{ dep: uid, depName, status: bool }]
   dependentIds:  [uid]   // mirror of dependent[].dep, used for querying and rules
@@ -120,12 +121,11 @@ tasks/{taskId}
 
 ## Known gaps / next steps
 
-- Only one reminder per task, at the due time. There's no "15 minutes before" option and no repeating tasks.
-- Lists are still sorted by priority, not due date, and overdue tasks aren't highlighted.
+- No repeating tasks (daily / weekdays / weekly) yet.
+- The Overdue tag appears the next time the list redraws, not the exact moment the due time passes.
 - iOS treats silent pushes as low priority, so an edited due time may not reach an iPhone until the child opens the app.
 - Tested so far: `flutter analyze` and unit tests only. Not yet run on a real device.
 - Children can't be edited or removed from the app yet ("Edit profile" and "Delete profile" are placeholders).
-- Tasks created before this fork don't have `dependentIds`, so children won't see them. Re-save them from the parent's edit screen.
 
 ## Tech stack
 

@@ -12,6 +12,8 @@ class Task {
   final String parent;
   // Exact due moment; null if the stored date/time can't be parsed
   final DateTime? dueAt;
+  // Minutes before dueAt for an early reminder; 0 = none
+  final int remindBefore;
 
   final List depenListString;
   int dependent = 0;
@@ -30,7 +32,16 @@ class Task {
     required this.depenListString,
     required this.id,
     this.dueAt,
+    this.remindBefore = 0,
   });
+
+  // depId == null checks whether anyone assigned is still unfinished
+  bool isOverdueFor(String? depId) =>
+      dueAt != null &&
+      dueAt!.isBefore(DateTime.now()) &&
+      dependentList.any(
+        (element) => !element.status && (depId == null || element.dep == depId),
+      );
 
   static Task fromSnapshot(DocumentSnapshot snap) {
     if (snap.data().toString().contains('dependent')) {}
@@ -59,6 +70,7 @@ class Task {
           .toList(),
       depenListString: depList,
       dueAt: dueAt,
+      remindBefore: (data['remindBefore'] as num?)?.toInt() ?? 0,
     );
     return task;
   }

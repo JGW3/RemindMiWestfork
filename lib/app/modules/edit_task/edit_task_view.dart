@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/remind_before_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -253,6 +254,10 @@ class EditTaskView extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 25,
+          ),
+          RemindBeforeDropdown(value: editTaskController.remindBefore),
           SizedBox(
             height: 25,
           ),
