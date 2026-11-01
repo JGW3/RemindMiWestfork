@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/routes/app_pages.dart';
+import 'package:remindmi/app/services/notification_service.dart';
 import 'package:remindmi/app/services/storage_service.dart';
 
 class LoginController extends GetxController {
@@ -103,6 +104,8 @@ class LoginController extends GetxController {
       StorageService.setUserType(documentSnapshot.get('role'));
       StorageService.setLoggedIn(true);
       showCustomSnackBarSuccess("login successfull", title: "success");
+      NotificationService.requestPermissions()
+          .then((_) => NotificationService.registerPush());
       Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
     } else {
       // Auth account exists but no profile doc (e.g. signup was interrupted)

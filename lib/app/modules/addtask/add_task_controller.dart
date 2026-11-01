@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/models/add_task_dependent_list_model.dart';
+import 'package:remindmi/app/helper/due_date.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -79,6 +80,7 @@ class AddTaskController extends GetxController {
                     'dependentIds':
                         FireStoreDB.dependentIdsOf(selectedDependents),
                     'time': selectedTime.text,
+                    'dueAt': _dueAt(),
                     'priority': finalPriority
                   });
                   isLoading.value = false;
@@ -116,6 +118,11 @@ class AddTaskController extends GetxController {
       isLoading.value = false;
       showCustomSnackBar('Task Name is required', title: "Error");
     }
+  }
+
+  Timestamp? _dueAt() {
+    final due = parseDue(selectedDate.text, selectedTime.text);
+    return due == null ? null : Timestamp.fromDate(due);
   }
 
   void setSelectedPriority(String Value) {

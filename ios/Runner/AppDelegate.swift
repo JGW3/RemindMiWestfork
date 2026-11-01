@@ -7,6 +7,8 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // Lets local and push notifications show while the app is open
+    UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

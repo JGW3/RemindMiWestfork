@@ -15,6 +15,15 @@ This fork started from a Software Engineering group project ([dderheim00/RemindM
 
 A task shows as **Completed** for the parent once every assigned child has finished it.
 
+### Reminders and notifications
+
+- **Due-time reminder (child's phone):** each incomplete task gets a local notification at its due time. These work offline and survive reboots, and they stay in step with the task list whenever the app is open.
+- **New task (child):** a push notification arrives as soon as a parent assigns a task, and the reminder is scheduled even if the app is closed.
+- **Task edited / completed / removed:** a silent push updates or cancels the reminder on the child's phone.
+- **Task done (parent):** a push notification when a child checks something off.
+
+Local reminders work on their own. The pushes need the Cloud Function in `functions/` deployed (see step 4).
+
 ## Setup
 
 ### Prerequisites
@@ -52,11 +61,25 @@ firebase use remindmi-dde76   # or your project id
 firebase deploy --only firestore:rules
 ```
 
-### 4. Run
+### 4. Deploy the push-notification function (optional)
+
+Cloud Functions require the Firebase **Blaze** (pay-as-you-go) plan. A family's usage stays well inside the free tier, but a billing account has to be attached. Skip this step and everything works except the pushes.
+
+```bash
+cd functions && npm install && cd ..
+firebase deploy --only functions
+```
+
+**iOS push** additionally needs an APNs key uploaded under Firebase console → Project settings → Cloud Messaging, plus the *Push Notifications* capability enabled for the Runner target in Xcode. Background mode `remote-notification` is already in `Info.plist`.
+
+### 5. Run
 
 ```bash
 flutter run
+flutter test   # due-date parsing tests
 ```
+
+On Android 12+, the app asks for the "Alarms & reminders" permission so reminders fire on time. If it's denied, reminders still fire, but Android may delay them by a few minutes.
 
 ### First run walkthrough
 
@@ -73,10 +96,12 @@ users/{uid}
   fullName, email
   role:    'parent' | 'dependent'
   parent:  parent uid ('' for parents)
+  fcmTokens: [push token per signed-in device]
 
 tasks/{taskId}
   parent, parentName
   name, description, date, time
+  dueAt:         Timestamp (exact due moment; date/time are display strings)
   priority:      1 = High, 2 = Medium, 3 = Low
   dependent:     [{ dep: uid, depName, status: bool }]
   dependentIds:  [uid]   // mirror of dependent[].dep, used for querying and rules
@@ -95,8 +120,10 @@ tasks/{taskId}
 
 ## Known gaps / next steps
 
-- **No actual reminders yet.** Tasks have a date and time, but nothing fires a notification. That would need `flutter_local_notifications` on the child's device, or FCM triggered from a Cloud Function.
-- Date and time are stored as display strings, not timestamps, so you can't sort by due date or detect overdue tasks.
+- Only one reminder per task, at the due time. There's no "15 minutes before" option and no repeating tasks.
+- Lists are still sorted by priority, not due date, and overdue tasks aren't highlighted.
+- iOS treats silent pushes as low priority, so an edited due time may not reach an iPhone until the child opens the app.
+- Tested so far: `flutter analyze` and unit tests only. Not yet run on a real device.
 - Children can't be edited or removed from the app yet ("Edit profile" and "Delete profile" are placeholders).
 - Tasks created before this fork don't have `dependentIds`, so children won't see them. Re-save them from the parent's edit screen.
 
