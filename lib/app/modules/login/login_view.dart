@@ -24,27 +24,27 @@ class _LoginViewState extends State<LoginView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 48,
-            ),
+            SizedBox(height: 48),
             Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: new IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(Icons.arrow_back))),
-            SizedBox(
-              height: 16,
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: new IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: Icon(Icons.arrow_back),
+              ),
             ),
+            SizedBox(height: 16),
             Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
               child: Text(
                 'Sign in to',
                 style: GoogleFonts.dmSans(
-                    fontSize: 36.0, fontWeight: FontWeight.w700),
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Container(
@@ -53,49 +53,52 @@ class _LoginViewState extends State<LoginView> {
               child: Text(
                 'your account',
                 style: GoogleFonts.dmSans(
-                    fontSize: 36.0, fontWeight: FontWeight.w700),
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            SizedBox(
-              height: 36,
-            ),
+            SizedBox(height: 36),
             Container(
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(238, 239, 241, 1),
-                  borderRadius: BorderRadius.circular(8)),
+                color: Color.fromRGBO(238, 239, 241, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
               height: 60,
               width: 398,
               margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextField(
                 style: GoogleFonts.dmSans(
-                    fontSize: 20, fontWeight: FontWeight.w500),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 onChanged: ((value) {
                   MyLoginController.changeEmailText();
                 }),
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Email ID",
-                    prefixIcon: Icon(
-                      Icons.mail_outline,
-                    )),
+                  border: InputBorder.none,
+                  hintText: "Email ID",
+                  prefixIcon: Icon(Icons.mail_outline),
+                ),
               ),
             ),
-            SizedBox(
-              height: 12,
-            ),
+            SizedBox(height: 12),
             Container(
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(238, 239, 241, 1),
-                  borderRadius: BorderRadius.circular(8)),
+                color: Color.fromRGBO(238, 239, 241, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
               height: 60,
               width: 398,
               margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Obx(
                 () => TextField(
                   style: GoogleFonts.dmSans(
-                      fontSize: 20, fontWeight: FontWeight.w500),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   controller: _passwordController,
                   obscureText: (MyLoginController.passwordVisible.value),
@@ -107,9 +110,11 @@ class _LoginViewState extends State<LoginView> {
                     hintText: "Password",
                     prefixIcon: Container(child: Icon(Icons.key_outlined)),
                     suffixIcon: InkWell(
-                      child: Icon(MyLoginController.passwordVisible.value
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
+                      child: Icon(
+                        MyLoginController.passwordVisible.value
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
                       onTap: () {
                         MyLoginController.passwordVisible.value =
                             !MyLoginController.passwordVisible.value;
@@ -119,9 +124,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Container(
               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
               width: 398,
@@ -131,10 +134,13 @@ class _LoginViewState extends State<LoginView> {
                   fillColor: Color.fromRGBO(24, 90, 219, 1.0),
                   elevation: 0.0,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                   onPressed: () {
                     MyLoginController.login(
-                        _emailController.text, _passwordController.text);
+                      _emailController.text,
+                      _passwordController.text,
+                    );
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +149,7 @@ class _LoginViewState extends State<LoginView> {
                         CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 1.5,
-                        )
+                        ),
                       ],
                       Container(
                         child: Align(
@@ -151,9 +157,10 @@ class _LoginViewState extends State<LoginView> {
                           child: Text(
                             "Sign in",
                             style: GoogleFonts.dmSans(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w500),
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
@@ -162,9 +169,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 25,
-            ),
+            SizedBox(height: 25),
             Align(
               alignment: Alignment.center,
               child: GestureDetector(
@@ -174,39 +179,41 @@ class _LoginViewState extends State<LoginView> {
                 child: Text(
                   'Forgot Password',
                   style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      color: Color.fromRGBO(84, 94, 111, 1)),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    color: Color.fromRGBO(84, 94, 111, 1),
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 36,
-            ),
+            SizedBox(height: 36),
             Align(
               alignment: Alignment.center,
               child: RichText(
                 text: TextSpan(
                   text: 'Don\'t have account? ',
                   style: GoogleFonts.dmSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(157, 163, 173, 1)),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromRGBO(157, 163, 173, 1),
+                  ),
                   children: <TextSpan>[
                     TextSpan(
-                        text: 'Sign Up',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Get.toNamed(Routes.SIGNUP);
-                          },
-                        style: GoogleFonts.dmSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(24, 90, 219, 1))),
+                      text: 'Sign Up',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.toNamed(Routes.SIGNUP);
+                        },
+                      style: GoogleFonts.dmSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(24, 90, 219, 1),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

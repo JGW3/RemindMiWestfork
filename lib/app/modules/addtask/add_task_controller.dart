@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:remindmi/app/models/add_task_dependent_list_model.dart';
+import 'package:remindmi/app/helper/assignment.dart';
 import 'package:remindmi/app/helper/due_date.dart';
 import 'package:remindmi/app/helper/show_custome_snack_bar.dart';
 import 'package:remindmi/app/routes/app_pages.dart';
@@ -14,12 +15,9 @@ class AddTaskController extends GetxController {
   var isSuccess = false.obs;
   var selectedPriority = 'Select Priority'.obs;
   var remindBefore = 0.obs;
-  List<String> priorityList = [
-    'Select Priority',
-    'High',
-    'Medium',
-    'Low',
-  ];
+  var repeat = 'none'.obs;
+  var takeTurns = false.obs;
+  List<String> priorityList = ['Select Priority', 'High', 'Medium', 'Low'];
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   TextEditingController selectedDate = TextEditingController();
   TextEditingController selectedTime = TextEditingController();
@@ -57,8 +55,8 @@ class AddTaskController extends GetxController {
     if (taskName != '') {
       if (taskDescription != '') {
         if (selectedPriority.value != 'Select Priority') {
-          if (selectedDate.text != '') {
-            if (selectedTime.text != '') {
+          if (selectedDate.text != '' || repeat.value == 'asNeeded') {
+            if (selectedTime.text != '' || repeat.value == 'asNeeded') {
               if (selectedDependents.isNotEmpty) {
                 try {
                   var finalPriority;
@@ -69,32 +67,40 @@ class AddTaskController extends GetxController {
                   } else {
                     finalPriority = 3;
                   }
-                  CollectionReference ref =
-                      FirebaseFirestore.instance.collection('tasks');
+                  CollectionReference ref = FirebaseFirestore.instance
+                      .collection('tasks');
                   await ref.add({
                     'parent': getStorge.read('id'),
                     'parentName': getStorge.read('fullName'),
                     'name': taskName,
                     'description': taskDescription,
                     'date': selectedDate.text,
-                    'dependent': selectedDependents,
-                    'dependentIds':
-                        FireStoreDB.dependentIdsOf(selectedDependents),
+                    ...assignmentFields(
+                      selected: selectedDependents,
+                      dependents: dependents,
+                      takeTurns: takeTurns.value && repeat.value != 'none',
+                      existing: null,
+                    ),
                     'time': selectedTime.text,
                     'dueAt': _dueAt(),
                     'remindBefore': remindBefore.value,
-                    'priority': finalPriority
+                    'repeat': repeat.value,
+                    'priority': finalPriority,
                   });
                   isLoading.value = false;
-                  showCustomSnackBarSuccess("Task added successfully",
-                      title: "success");
+                  showCustomSnackBarSuccess(
+                    "Task added successfully",
+                    title: "success",
+                  );
                   isSuccess.value = true;
                   reset();
                   Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
                 } catch (e) {
                   isLoading.value = false;
-                  showCustomSnackBar('Unexpected error occured',
-                      title: "Error");
+                  showCustomSnackBar(
+                    'Unexpected error occured',
+                    title: "Error",
+                  );
                 }
               } else {
                 isLoading.value = false;

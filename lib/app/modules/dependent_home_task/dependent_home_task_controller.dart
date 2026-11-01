@@ -8,7 +8,7 @@ enum TaskStatus { incomplete, complete }
 class DependentHomeTaskListController extends GetxController {
   final tasks = <Task>[].obs;
   final TaskStatus taskStatus;
-  
+
   DependentHomeTaskListController({this.taskStatus = TaskStatus.incomplete});
 
   @override
@@ -16,7 +16,7 @@ class DependentHomeTaskListController extends GetxController {
     super.onInit();
     _loadTasks();
   }
-  
+
   void _loadTasks() {
     switch (taskStatus) {
       case TaskStatus.incomplete:

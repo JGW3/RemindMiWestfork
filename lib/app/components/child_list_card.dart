@@ -9,9 +9,12 @@ class ChildListCard extends StatelessWidget {
   final String from;
   final getStorge = GetStorage();
 
-  ChildListCard(
-      {Key? key, required this.index, required this.row, required this.from})
-      : super(key: key);
+  ChildListCard({
+    Key? key,
+    required this.index,
+    required this.row,
+    required this.from,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,8 @@ class ChildListCard extends StatelessWidget {
                 });
               } else {
                 row.selectedDependents.removeWhere(
-                    (element) => element['dep'] == row.dependents[index].id);
+                  (element) => element['dep'] == row.dependents[index].id,
+                );
               }
             },
             title: Container(
@@ -48,12 +52,7 @@ class ChildListCard extends StatelessWidget {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Color.fromARGB(
-                        255,
-                        101,
-                        152,
-                        254,
-                      ),
+                      backgroundColor: Color.fromARGB(255, 101, 152, 254),
                       radius: 32,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
@@ -65,27 +64,23 @@ class ChildListCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 16,
-                    ),
+                    SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 4,
-                          ),
+                          SizedBox(height: 4),
                           Text(
                             row.dependents[index].name,
                             style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w500, fontSize: 18),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
                           ),
-                          SizedBox(
-                            height: 4,
-                          ),
+                          SizedBox(height: 4),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -117,7 +112,8 @@ class ChildListCard extends StatelessWidget {
                 });
               } else {
                 row.selectedDependents.removeWhere(
-                    (element) => element['dep'] == row.dependents[index].id);
+                  (element) => element['dep'] == row.dependents[index].id,
+                );
               }
             },
             title: Container(
@@ -126,12 +122,7 @@ class ChildListCard extends StatelessWidget {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Color.fromARGB(
-                        255,
-                        101,
-                        152,
-                        254,
-                      ),
+                      backgroundColor: Color.fromARGB(255, 101, 152, 254),
                       radius: 32,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
@@ -143,27 +134,23 @@ class ChildListCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 16,
-                    ),
+                    SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 4,
-                          ),
+                          SizedBox(height: 4),
                           Text(
                             row.dependents[index].name,
                             style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w500, fontSize: 18),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
                           ),
-                          SizedBox(
-                            height: 4,
-                          ),
+                          SizedBox(height: 4),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

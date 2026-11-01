@@ -7,6 +7,7 @@ import 'package:remindmi/app/components/task_view.dart';
 import 'package:remindmi/app/helper/utils.dart';
 import 'package:remindmi/app/modules/addtask/add_task_view.dart';
 import 'package:remindmi/app/modules/home_task_list_page/home_task_list_controller.dart';
+
 //_________________IT IS PARENT'S HOME TASK LIST PAGE ____________________//
 
 class HomeTaskListViews extends StatefulWidget {
@@ -15,8 +16,13 @@ class HomeTaskListViews extends StatefulWidget {
 }
 
 class _HomeTaskListViewsState extends State<HomeTaskListViews> {
-  final home_task_controller = Get.put(HomeTaskListController(taskStatus: ParentTaskStatus.incomplete));
-  final home_task_controller2 = Get.put(HomeTaskListController(taskStatus: ParentTaskStatus.complete), tag: 'completed');
+  final home_task_controller = Get.put(
+    HomeTaskListController(taskStatus: ParentTaskStatus.incomplete),
+  );
+  final home_task_controller2 = Get.put(
+    HomeTaskListController(taskStatus: ParentTaskStatus.complete),
+    tag: 'completed',
+  );
   final getStorge = GetStorage();
 
   @override
@@ -26,11 +32,7 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
         body: Obx(
           () => CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 32,
-                ),
-              ),
+              SliverToBoxAdapter(child: SizedBox(height: 32)),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -45,9 +47,7 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                         ),
                       ),
                       Text(
-                        GetFirtsName(
-                          getStorge.read('fullName'),
-                        ),
+                        GetFirtsName(getStorge.read('fullName')),
                         style: GoogleFonts.dmSans(
                           fontSize: 32,
                           fontWeight: FontWeight.w700,
@@ -58,16 +58,12 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                         'assets/images/emoji.png',
                         height: 35,
                         width: 35,
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 11,
-                ),
-              ),
+              SliverToBoxAdapter(child: SizedBox(height: 11)),
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 sliver: SliverToBoxAdapter(
@@ -85,45 +81,39 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 69, 69, 209),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
               if (home_task_controller.tasks.isNotEmpty)
                 SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return GestureDetector(
-                        onLongPress: () {
-                          print(index);
-                          showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return TaskViewCard(
-                                  indexNo: index,
-                                  row: home_task_controller.tasks[index],
-                                  from: 'home');
-                            },
-                          );
-                        },
-                        child: TaskListCard(
-                          index: index,
-                          row: home_task_controller.tasks[index],
-                        ),
-                      );
-                    },
-                    childCount: home_task_controller.tasks.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return GestureDetector(
+                      onLongPress: () {
+                        print(index);
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return TaskViewCard(
+                              indexNo: index,
+                              row: home_task_controller.tasks[index],
+                              from: 'home',
+                            );
+                          },
+                        );
+                      },
+                      child: TaskListCard(
+                        index: index,
+                        row: home_task_controller.tasks[index],
+                      ),
+                    );
+                  }, childCount: home_task_controller.tasks.length),
                 ),
               if (home_task_controller.tasks.isEmpty)
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 56,
-                  ),
-                ),
+                SliverToBoxAdapter(child: SizedBox(height: 56)),
               if (home_task_controller.tasks.isEmpty)
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -140,11 +130,7 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                     ),
                   ),
                 ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 56,
-                ),
-              ),
+              SliverToBoxAdapter(child: SizedBox(height: 56)),
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 sliver: SliverToBoxAdapter(
@@ -162,45 +148,44 @@ class _HomeTaskListViewsState extends State<HomeTaskListViews> {
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 69, 69, 209),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    return GestureDetector(
-                      onLongPress: () {
-                        print(index);
-                        showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            return TaskViewCard(
-                                indexNo: index,
-                                row: home_task_controller2.tasks[index],
-                                from: 'home');
-                          },
-                        );
-                      },
-                      child: TaskListCard(
-                        index: index,
-                        row: home_task_controller2.tasks[index],
-                      ),
-                    );
-                  },
-                  childCount: home_task_controller2.tasks.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return GestureDetector(
+                    onLongPress: () {
+                      print(index);
+                      showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return TaskViewCard(
+                            indexNo: index,
+                            row: home_task_controller2.tasks[index],
+                            from: 'home',
+                          );
+                        },
+                      );
+                    },
+                    child: TaskListCard(
+                      index: index,
+                      row: home_task_controller2.tasks[index],
+                    ),
+                  );
+                }, childCount: home_task_controller2.tasks.length),
               ),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Color.fromARGB(255, 3, 163, 0),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           icon: Icon(Icons.add_circle_outlined),
           label: Text(
             'Add Task',

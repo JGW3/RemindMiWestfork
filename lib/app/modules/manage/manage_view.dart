@@ -27,68 +27,65 @@ class _ManageViewState extends State<ManageView> {
   Widget build(BuildContext context) {
     GetStorage getStorage = GetStorage();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          toolbarHeight: 103,
-          elevation: 0,
-          title: Column(
-            children: [
-              Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                child: Text(
-                  'Manage',
-                  style: GoogleFonts.dmSans(
-                      fontSize: 36.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        toolbarHeight: 103,
+        elevation: 0,
+        title: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
+              child: Text(
+                'Manage',
+                style: GoogleFonts.dmSans(
+                  fontSize: 36.0,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: Container(
-          child: CustomScrollView(
-            slivers: [
+      ),
+      body: Container(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: SizedBox(height: 12)),
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 12,
-                ),
-              ),
-              if (getStorage.read('role') == 'parent')
-              SliverToBoxAdapter(
-                  child: ManageCard(
-                    icon: Icons.add_box,
-                    title: 'Add Dependent',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddDependentView();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SliverToBoxAdapter(
                 child: ManageCard(
-                  icon: Icons.article,
-                  title: 'All Task',
+                  icon: Icons.add_box,
+                  title: 'Add Dependent',
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return AllTaskListView();
+                          return AddDependentView();
                         },
                       ),
                     );
                   },
                 ),
               ),
-              if (getStorage.read('role') == 'parent')
+            SliverToBoxAdapter(
+              child: ManageCard(
+                icon: Icons.article,
+                title: 'All Task',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AllTaskListView();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(
                   icon: Icons.accessible,
@@ -105,7 +102,7 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
-              if (getStorage.read('role') == 'parent')
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(
                   icon: Icons.settings_sharp,
@@ -122,7 +119,7 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
-              if (getStorage.read('role') == 'parent')
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(
                   icon: Icons.copyright,
@@ -139,7 +136,7 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
-              if (getStorage.read('role') == 'parent')
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(
                   icon: Icons.gpp_good,
@@ -156,7 +153,7 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
-              if (getStorage.read('role') == 'parent')
+            if (getStorage.read('role') == 'parent')
               SliverToBoxAdapter(
                 child: ManageCard(
                   icon: Icons.article_rounded,
@@ -173,22 +170,23 @@ class _ManageViewState extends State<ManageView> {
                   },
                 ),
               ),
-              
-              SliverToBoxAdapter(
-                child: ManageCard(
-                  icon: Icons.logout_sharp,
-                  title: 'Sign out',
-                  onTap: () async {
-                    await NotificationService.unregister();
-                    await FirebaseAuth.instance.signOut();
-                    getStorage.erase();
-                    Get.deleteAll();
-                    Get.offAllNamed(Routes.LANDINGPAGE);
-                  },
-                ),
+
+            SliverToBoxAdapter(
+              child: ManageCard(
+                icon: Icons.logout_sharp,
+                title: 'Sign out',
+                onTap: () async {
+                  await NotificationService.unregister();
+                  await FirebaseAuth.instance.signOut();
+                  getStorage.erase();
+                  Get.deleteAll();
+                  Get.offAllNamed(Routes.LANDINGPAGE);
+                },
               ),
-            ]
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

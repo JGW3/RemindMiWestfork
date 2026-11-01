@@ -1,3 +1,4 @@
+import 'package:remindmi/app/components/task_badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -10,25 +11,22 @@ class DependentTaskViewCard extends StatelessWidget {
   final row;
   final getStorge = GetStorage();
 
-  DependentTaskViewCard({
-    Key? key,
-    required this.indexNo,
-    required this.row,
-  }) : super(key: key);
+  DependentTaskViewCard({Key? key, required this.indexNo, required this.row})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.9),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             decoration: BoxDecoration(
-                border: Border(
-              bottom: BorderSide(color: Colors.grey, width: 1),
-            )),
+              border: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
+            ),
             child: Row(
               children: [
                 Container(
@@ -44,12 +42,14 @@ class DependentTaskViewCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                      alignment: Alignment.topRight,
-                      child: new IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: Icon(Icons.close))),
+                    alignment: Alignment.topRight,
+                    child: new IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -61,7 +61,9 @@ class DependentTaskViewCard extends StatelessWidget {
             child: Text(
               'Assign From',
               style: GoogleFonts.dmSans(
-                  fontSize: 22.0, fontWeight: FontWeight.w500),
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           //parents list start
@@ -73,12 +75,7 @@ class DependentTaskViewCard extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Color.fromARGB(
-                      255,
-                      101,
-                      152,
-                      254,
-                    ),
+                    backgroundColor: Color.fromARGB(255, 101, 152, 254),
                     radius: 32,
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -90,9 +87,7 @@ class DependentTaskViewCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 16,
-                  ),
+                  SizedBox(width: 16),
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +95,9 @@ class DependentTaskViewCard extends StatelessWidget {
                         Text(
                           row.parentName,
                           style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w500, fontSize: 18),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
                         ),
                         Container(
                           width: 120,
@@ -116,13 +113,13 @@ class DependentTaskViewCard extends StatelessWidget {
                             ),
                           ),
                           decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              color: Color.fromARGB(255, 237, 243, 255)),
-                        )
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Color.fromARGB(255, 237, 243, 255),
+                          ),
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -136,43 +133,50 @@ class DependentTaskViewCard extends StatelessWidget {
             child: Text(
               'Task Description',
               style: GoogleFonts.dmSans(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 79, 89, 107)),
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 79, 89, 107),
+              ),
             ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
             alignment: Alignment.centerLeft,
-            child: Text(row.description,
-                style: GoogleFonts.dmSans(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black)),
+            child: Text(
+              row.description,
+              style: GoogleFonts.dmSans(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
           ),
-          SizedBox(
-            height: 24,
-          ),
+          SizedBox(height: 24),
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.fromLTRB(16, 0, 0, 6),
             child: Text(
               'Task Time',
               style: GoogleFonts.dmSans(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 79, 89, 107)),
+                fontSize: 22.0,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 79, 89, 107),
+              ),
             ),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
             alignment: Alignment.centerLeft,
-            child: Text(row.time + ',' + row.date,
-                style: GoogleFonts.dmSans(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black)),
+            child: Text(
+              dueText(row, separator: ', '),
+              style: GoogleFonts.dmSans(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
           ),
+          CompletionHistory(row: row),
           Container(
             margin: EdgeInsets.fromLTRB(16, 47, 16, 43),
             child: Row(
@@ -182,7 +186,8 @@ class DependentTaskViewCard extends StatelessWidget {
                     fillColor: Colors.green,
                     elevation: 0.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.0)),
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
                     onPressed: () async {
                       try {
                         await FireStoreDB().completeTask(row.id);
@@ -193,9 +198,11 @@ class DependentTaskViewCard extends StatelessWidget {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(32.0)),
-                                  side: BorderSide(color: Colors.black)),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(32.0),
+                                ),
+                                side: BorderSide(color: Colors.black),
+                              ),
                               backgroundColor: Colors.white,
                               title: Center(
                                 child: Icon(
@@ -216,10 +223,7 @@ class DependentTaskViewCard extends StatelessWidget {
                                         color: Colors.black,
                                       ),
                                     ),
-                                    Divider(
-                                      color: Colors.grey,
-                                      height: 4.0,
-                                    ),
+                                    Divider(color: Colors.grey, height: 4.0),
                                     Text(
                                       "You have successfully completed the task. Keep up the good work!",
                                       textAlign: TextAlign.left,
@@ -239,9 +243,7 @@ class DependentTaskViewCard extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(color: Colors.green),
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        32.0,
-                                      ),
+                                      Radius.circular(32.0),
                                     ),
                                   ),
                                   onPressed: () {
@@ -259,9 +261,10 @@ class DependentTaskViewCard extends StatelessWidget {
                                           child: Text(
                                             "Close",
                                             style: GoogleFonts.dmSans(
-                                                color: Colors.green,
-                                                fontSize: 20.0,
-                                                fontWeight: FontWeight.w500),
+                                              color: Colors.green,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -288,9 +291,10 @@ class DependentTaskViewCard extends StatelessWidget {
                             child: Text(
                               " Completed",
                               style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w500),
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -298,16 +302,14 @@ class DependentTaskViewCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 52,
-                  width: 12,
-                ),
+                SizedBox(height: 52, width: 12),
                 Expanded(
                   child: RawMaterialButton(
                     fillColor: Color.fromRGBO(255, 75, 75, 1.0),
                     elevation: 0.0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                     onPressed: () {
                       Get.back();
                     },
@@ -323,25 +325,29 @@ class DependentTaskViewCard extends StatelessWidget {
                             child: Text(
                               " Cancel",
                               style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w500),
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
     );
   }
 }

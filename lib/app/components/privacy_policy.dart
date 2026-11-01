@@ -9,14 +9,14 @@ class PrivacyPolicy extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(
-            height: 18,
-          ),
+          SizedBox(height: 18),
           Container(
             child: Text(
               'Privacy Policy',
               style: GoogleFonts.dmSans(
-                  fontSize: 30.0, fontWeight: FontWeight.w700),
+                fontSize: 30.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           Container(
@@ -39,7 +39,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Information Collection and Use',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -61,7 +63,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Log Data  ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -79,7 +83,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Cookies   ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -102,7 +108,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Service Providers   ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -127,7 +135,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Security  ',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -145,7 +155,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Children’s Privacy',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -163,7 +175,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Changes to This Privacy Policy',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -181,7 +195,9 @@ class PrivacyPolicy extends StatelessWidget {
                       child: Text(
                         'Contact Us',
                         style: GoogleFonts.dmSans(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
@@ -198,9 +214,7 @@ class PrivacyPolicy extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 28,
-          ),
+          SizedBox(height: 28),
         ],
       ),
     );

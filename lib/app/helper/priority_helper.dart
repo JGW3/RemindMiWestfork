@@ -13,7 +13,7 @@ class PriorityHelper {
         return 'Unknown';
     }
   }
-  
+
   static Color getPriorityColor(int priority) {
     switch (priority) {
       case 1:
@@ -26,7 +26,7 @@ class PriorityHelper {
         return Colors.grey;
     }
   }
-  
+
   static Color getPriorityBackgroundColor(int priority) {
     switch (priority) {
       case 1:
@@ -39,7 +39,7 @@ class PriorityHelper {
         return Colors.grey.withValues(alpha: 0.1);
     }
   }
-  
+
   static IconData getPriorityIcon(int priority) {
     switch (priority) {
       case 1:

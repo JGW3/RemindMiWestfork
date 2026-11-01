@@ -59,9 +59,14 @@ class AddDependentController extends GetxController {
     }
   }
 
-  void addDependent(String fullName, String email, String password,
-      String CPassword, String role) async {
-// takes data from view and create account with role 'dependent'
+  void addDependent(
+    String fullName,
+    String email,
+    String password,
+    String CPassword,
+    String role,
+  ) async {
+    // takes data from view and create account with role 'dependent'
 
     isLoading.value = true;
 
@@ -70,11 +75,16 @@ class AddDependentController extends GetxController {
         if (password == CPassword) {
           if (pass_valid.hasMatch(password)) {
             try {
-              await FireStoreDB()
-                  .createDependent(fullName, email.trim(), password);
+              await FireStoreDB().createDependent(
+                fullName,
+                email.trim(),
+                password,
+              );
               isLoading.value = false;
-              showCustomSnackBarSuccess("Account created successfully",
-                  title: "success");
+              showCustomSnackBarSuccess(
+                "Account created successfully",
+                title: "success",
+              );
               isSuccess.value = true;
               Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
               //after all process page is navigated to home of parent
@@ -85,8 +95,10 @@ class AddDependentController extends GetxController {
                 showCustomSnackBar("User Already Registered", title: "Email");
               } else if (e.code == 'unknown') {
                 isLoading.value = false;
-                showCustomSnackBar("Please fill all the fields",
-                    title: "Error");
+                showCustomSnackBar(
+                  "Please fill all the fields",
+                  title: "Error",
+                );
               } else {
                 isLoading.value = false;
                 showCustomSnackBar(e.code, title: "Error");
@@ -98,13 +110,16 @@ class AddDependentController extends GetxController {
           } else {
             isLoading.value = false;
             showCustomSnackBar(
-                "Password should contain Capital, small letter, Number & special character!",
-                title: "Error");
+              "Password should contain Capital, small letter, Number & special character!",
+              title: "Error",
+            );
           }
         } else {
           isLoading.value = false;
-          showCustomSnackBar("Confirm Password didn't matched !",
-              title: "Error");
+          showCustomSnackBar(
+            "Confirm Password didn't matched !",
+            title: "Error",
+          );
         }
       } else {
         isLoading.value = false;
@@ -112,8 +127,10 @@ class AddDependentController extends GetxController {
       }
     } else {
       isLoading.value = false;
-      showCustomSnackBar("Please accept the terms and condition first! ",
-          title: "Terms & Condition");
+      showCustomSnackBar(
+        "Please accept the terms and condition first! ",
+        title: "Terms & Condition",
+      );
     }
   }
 }

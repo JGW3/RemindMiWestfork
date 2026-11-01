@@ -23,9 +23,7 @@ class _AllTaskListViewState extends State<AllTaskListView> {
         child: Align(
           child: Column(
             children: [
-              SizedBox(
-                height: 48,
-              ),
+              SizedBox(height: 48),
               Container(
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -36,51 +34,52 @@ class _AllTaskListViewState extends State<AllTaskListView> {
                   icon: Icon(Icons.arrow_back),
                 ),
               ),
-              SizedBox(
-                height: 16,
-              ),
+              SizedBox(height: 16),
               Container(
                 alignment: Alignment.centerLeft,
                 margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
                 child: Text(
                   'All Tasks',
                   style: GoogleFonts.dmSans(
-                      fontSize: 36.0, fontWeight: FontWeight.w700),
+                    fontSize: 36.0,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Expanded(
-                  child: Obx(
-                () => Container(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    itemCount: allTaskListController.tasks.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onLongPress: () {
-                          print(index);
-                          showModalBottomSheet(
+                child: Obx(
+                  () => Container(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      itemCount: allTaskListController.tasks.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onLongPress: () {
+                            print(index);
+                            showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               isScrollControlled: true,
                               context: context,
                               builder: (context) {
                                 return TaskViewCard(
-                                    indexNo: index,
-                                    row: allTaskListController.tasks[index],
-                                    from: 'allTask');
-                              });
-                        },
-                        child: TaskListCard(
-                          index: index,
-                          row: allTaskListController.tasks[index],
-                        ),
-                      );
-                    },
+                                  indexNo: index,
+                                  row: allTaskListController.tasks[index],
+                                  from: 'allTask',
+                                );
+                              },
+                            );
+                          },
+                          child: TaskListCard(
+                            index: index,
+                            row: allTaskListController.tasks[index],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ))
+              ),
             ],
           ),
         ),

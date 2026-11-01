@@ -4,10 +4,7 @@ class Dependent {
   final String name;
   final String id;
 
-  const Dependent({
-    required this.name,
-    required this.id,
-  });
+  const Dependent({required this.name, required this.id});
 
   static Dependent fromSnapshot(DocumentSnapshot snap) {
     Dependent dependent = Dependent(

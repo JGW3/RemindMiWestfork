@@ -42,16 +42,14 @@ class LoginController extends GetxController {
     loginUsingEmailPassword(email.trim(), password);
   }
 
-  Future<User?> loginUsingEmailPassword(
-    String email,
-    String password,
-  ) async {
+  Future<User?> loginUsingEmailPassword(String email, String password) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       // Core authentication process is done here
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email,
-          password: password.trim().replaceAll(RegExp(r' \s+'), ' '));
+        email: email,
+        password: password.trim().replaceAll(RegExp(r' \s+'), ' '),
+      );
       await route(); // Route is called here . in route the page is directed to bottom navigation home aka home page ...
       //and data of user is saved in get storage
       isLoading.value = false;
@@ -104,8 +102,9 @@ class LoginController extends GetxController {
       StorageService.setUserType(documentSnapshot.get('role'));
       StorageService.setLoggedIn(true);
       showCustomSnackBarSuccess("login successfull", title: "success");
-      NotificationService.requestPermissions()
-          .then((_) => NotificationService.registerPush());
+      NotificationService.requestPermissions().then(
+        (_) => NotificationService.registerPush(),
+      );
       Get.offAllNamed(Routes.BOTTOMNAVIGATIION);
     } else {
       // Auth account exists but no profile doc (e.g. signup was interrupted)

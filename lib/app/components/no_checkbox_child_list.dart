@@ -8,10 +8,7 @@ class NoCheckboxChildList extends StatelessWidget {
 
   final int index;
 
-  NoCheckboxChildList({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
+  NoCheckboxChildList({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +22,7 @@ class NoCheckboxChildList extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Color.fromARGB(
-                    255,
-                    101,
-                    152,
-                    254,
-                  ),
+                  backgroundColor: Color.fromARGB(255, 101, 152, 254),
                   radius: 32,
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
@@ -42,27 +34,23 @@ class NoCheckboxChildList extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 16,
-                ),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 4,
-                      ),
+                      SizedBox(height: 4),
                       Text(
                         child_list_controller.dependents[index].name,
                         style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w500, fontSize: 18),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
                       ),
-                      SizedBox(
-                        height: 4,
-                      ),
+                      SizedBox(height: 4),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -23,14 +23,16 @@ class ForgotPasswordController extends GetxController {
     super.onClose();
   }
 
-// sendResetLink provides the link from firebase inorder to change password
+  // sendResetLink provides the link from firebase inorder to change password
   sendResetLink(String email) async {
     isLoading.value = true;
     try {
       await _auth.sendPasswordResetEmail(email: email.trim());
       isLoading.value = false;
-      showCustomSnackBarSuccess("Password reset link is sent to email !",
-          title: "success");
+      showCustomSnackBarSuccess(
+        "Password reset link is sent to email !",
+        title: "success",
+      );
     } on FirebaseAuthException {
       isLoading.value = false;
       showCustomSnackBar("Something went wrong !", title: "Error");
